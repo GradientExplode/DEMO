@@ -28,13 +28,6 @@ jobs:
       - name: Build production bundle
         run: npm run build
 
-      - name: Copy resources into build output
-        run: |
-          mkdir -p dist/mesh
-          cp -R mesh/* dist/mesh/
-          mkdir -p dist/video
-          cp -R video/* dist/video/
-
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v3
 
