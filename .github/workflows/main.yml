@@ -22,6 +22,10 @@ jobs:
         with:
           node-version: '18'
 
+      - name: Create .env file
+        run: |
+          echo "OPENROUTER_API_KEY=${{ secrets.OPENROUTER_KEY }}" > .env
+
       - name: Install dependencies
         run: npm ci
 
@@ -32,10 +36,6 @@ jobs:
         run: |
           mkdir -p dist/mesh
           cp -R mesh/* dist/mesh/
-
-      - name: Add OpenRouter Key
-        run: |
-          echo "OPENROUTER_API_KEY=${{ secrets.OPENROUTER_KEY }}" > dist/.env
 
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v3
