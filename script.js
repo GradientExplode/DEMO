@@ -304,7 +304,7 @@ async function sendToOpenRouter(message) {
         'Authorization': `Bearer ${API_KEY}`,
         'Content-Type': 'application/json',
         'HTTP-Referer': window.location.origin,
-        'X-Title': 'AI Chat Assistant'
+        'X-Title': 'AI Coding Assistant'
       },
       body: JSON.stringify(requestBody)
     });
@@ -344,8 +344,40 @@ async function sendToOpenRouter(message) {
   }
 }
 
+// Add debounce function
+function debounce(func, wait) {
+  let timeout;
+  return function executedFunction(...args) {
+    const later = () => {
+      clearTimeout(timeout);
+      func(...args);
+    };
+    clearTimeout(timeout);
+    timeout = setTimeout(later, wait);
+  };
+}
+
 // Event Listeners
 window.addEventListener('DOMContentLoaded', () => {
+  // Add scroll event listener for navigation bar
+  const mainNav = document.querySelector('.main-nav');
+  const scrollThreshold = 400; // pixels from top to trigger the change
+  let isScrolled = false;
+
+  const handleScroll = debounce(() => {
+    const shouldBeScrolled = window.scrollY > scrollThreshold;
+    if (shouldBeScrolled !== isScrolled) {
+      isScrolled = shouldBeScrolled;
+      if (isScrolled) {
+        mainNav.classList.add('scrolled');
+      } else {
+        mainNav.classList.remove('scrolled');
+      }
+    }
+  }, 100); // 100ms debounce time
+
+  window.addEventListener('scroll', handleScroll);
+
   // Initialize all your mesh viewers (exactly as before)
   createMeshViewer('axon-viewer', 'mesh/axon.ply', 0x6c63ff);
   createMeshViewer('soma-viewer', 'mesh/soma.ply', 0x6c63ff);
