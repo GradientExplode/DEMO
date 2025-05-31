@@ -33,6 +33,10 @@ jobs:
           mkdir -p dist/mesh
           cp -R mesh/* dist/mesh/
 
+      - name: Add OpenRouter Key
+        run: |
+          echo ${{ secrets.OPENROUTER_KEY }} > .env
+
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v3
 
