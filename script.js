@@ -14,6 +14,11 @@ function createMeshViewer(containerId, plyPath, color = 0x2d2d8f) {
     renderer.setSize(container.clientWidth, container.clientHeight);
     renderer.setPixelRatio(window.devicePixelRatio);
     container.appendChild(renderer.domElement);
+
+    // Create frustum for culling
+    const frustum = new THREE.Frustum();
+    const projScreenMatrix = new THREE.Matrix4();
+
     // Lights
     scene.add(new THREE.AmbientLight(0xffffff, 0.7));
     const dirLight = new THREE.DirectionalLight(0xffffff, 0.8);
@@ -36,6 +41,33 @@ function createMeshViewer(containerId, plyPath, color = 0x2d2d8f) {
         controls.autoRotateSpeed = 1.0;
     }
 
+    let mesh = null;
+    let boundingBox = null;
+    let isViewerVisible = false;
+
+    // Create intersection observer for the viewer container
+    const viewerObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            isViewerVisible = entry.isIntersecting;
+            // Only enable auto-rotate and rendering when the viewer is visible
+            controls.autoRotate = isViewerVisible;
+            if (mesh) {
+                mesh.visible = isViewerVisible;
+            }
+            // If viewer becomes invisible, stop rendering
+            if (!isViewerVisible) {
+                renderer.setAnimationLoop(null);
+            } else {
+                renderer.setAnimationLoop(animate);
+            }
+        });
+    }, {
+        threshold: 0 // Trigger as soon as any part of the viewer enters/exits the viewport
+    });
+
+    // Start observing the viewer container
+    viewerObserver.observe(container);
+
     // Load mesh
     const loader = new PLYLoader();
     loader.load(plyPath, geometry => {
@@ -45,8 +77,11 @@ function createMeshViewer(containerId, plyPath, color = 0x2d2d8f) {
         const maxDim = Math.max(size.x, size.y, size.z);
         
         const material = new THREE.MeshPhongMaterial({ color, shininess: 30 });
-        const mesh = new THREE.Mesh(geometry, material);
+        mesh = new THREE.Mesh(geometry, material);
         scene.add(mesh);
+
+        // Store bounding box for culling
+        boundingBox = new THREE.Box3().setFromObject(mesh);
 
         // Center the mesh and adjust camera
         const box = new THREE.Box3().setFromObject(mesh);
@@ -74,18 +109,33 @@ function createMeshViewer(containerId, plyPath, color = 0x2d2d8f) {
         controls.target.copy(center);
         controls.update();
 
-        animate();
+        // Start animation loop if viewer is visible
+        if (isViewerVisible) {
+            renderer.setAnimationLoop(animate);
+        }
     });
+
     // Responsive
     window.addEventListener('resize', () => {
         camera.aspect = container.clientWidth / container.clientHeight;
         camera.updateProjectionMatrix();
         renderer.setSize(container.clientWidth, container.clientHeight);
     });
+
     // Animation loop
     function animate() {
-        requestAnimationFrame(animate);
         controls.update();
+
+        // Only perform frustum culling if the viewer is visible
+        if (isViewerVisible && mesh && boundingBox) {
+            projScreenMatrix.multiplyMatrices(camera.projectionMatrix, camera.matrixWorldInverse);
+            frustum.setFromProjectionMatrix(projScreenMatrix);
+
+            // Check if mesh is in view frustum
+            const isInFrustum = frustum.intersectsBox(boundingBox);
+            mesh.visible = isInFrustum;
+        }
+
         renderer.render(scene, camera);
     }
 }
@@ -97,5 +147,21 @@ window.addEventListener('DOMContentLoaded', () => {
     createMeshViewer('axoncrossing-viewer', 'mesh/axoncrossing_low.ply', 0x6c63ff);
     createMeshViewer('somaprocess-viewer', 'mesh/soma_process.ply', 0x6c63ff);
     createMeshViewer('somabranching-viewer', 'mesh/soma_process_branching.ply', 0x6c63ff);
-    document.querySelector('.mesh-inner').classList.add('visible');
+    
+    // Add visible class to mesh and dmri sections when they come into view
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+            }
+        });
+    }, {
+        threshold: 0.1
+    });
+
+    document.querySelector('.mesh-inner')?.classList.add('visible');
+    const dmriInner = document.querySelector('.dmri-inner');
+    if (dmriInner) {
+        observer.observe(dmriInner);
+    }
 }); 

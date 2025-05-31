@@ -502,6 +502,12 @@ footer {
     z-index: 3;
 }
 
+.main-content.curved-edge {
+    border-top-left-radius: 80px; /* Adjust value as needed */
+    border-bottom-left-radius: 80px; /* Adjust value as needed */
+    overflow: hidden; /* Ensures content doesn't spill out of the curved corners */
+}
+
 .info-section {
     margin: 2.5rem 0;
     opacity: 0;
@@ -919,5 +925,161 @@ footer {
     /* Hide arrows on mobile screens */
     .axon-branch-svg {
         display: none;
+    }
+}
+
+.dmri-section {
+    width: 100%;
+    padding: 3rem 0;
+    background: linear-gradient(120deg, #e0e7ff 0%, #f5f7fa 100%);
+}
+
+.dmri-inner {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 0.8s, transform 0.8s;
+}
+
+.dmri-inner.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.dmri-content {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2.5rem;
+    box-sizing: border-box;
+    background: rgba(255,255,255,0.85);
+    border: 1px solid rgba(255,255,255,0.18);
+    border-radius: 24px;
+}
+
+.dmri-content h2 {
+    margin: 0 0 2rem;
+    font-size: 2.5rem;
+    color: #6c63ff;
+    text-align: center;
+    line-height: 1.2;
+}
+
+.video-container {
+    position: relative;
+    width: 100%;
+    margin-bottom: 2rem;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 4px 24px rgba(31,38,135,0.1);
+}
+
+.video-container iframe {
+    display: block;
+    border-radius: 16px;
+}
+
+.dmri-explanation {
+    margin-top: 2rem;
+}
+
+.dmri-info {
+    background: rgba(255,255,255,0.5);
+    padding: 2rem;
+    border-radius: 16px;
+    box-shadow: 0 4px 24px rgba(31,38,135,0.05);
+}
+
+.dmri-info h3 {
+    color: #6c63ff;
+    font-size: 1.6rem;
+    margin-bottom: 1rem;
+}
+
+.dmri-info p {
+    color: #333;
+    font-size: 1.1rem;
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+}
+
+.dmri-info ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.dmri-info li {
+    margin-bottom: 1rem;
+    padding-left: 1.5rem;
+    position: relative;
+    color: #444;
+    line-height: 1.5;
+}
+
+.dmri-info li:before {
+    content: "•";
+    color: #6c63ff;
+    position: absolute;
+    left: 0;
+    font-size: 1.2rem;
+}
+
+.dmri-info strong {
+    color: #6c63ff;
+    font-weight: 600;
+}
+
+@media (max-width: 900px) {
+    .dmri-section {
+        padding: 2rem 0;
+    }
+    
+    .dmri-content {
+        padding: 1.5rem;
+    }
+    
+    .dmri-content h2 {
+        font-size: 2rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .video-container {
+        margin-bottom: 1.5rem;
+    }
+    
+    .video-container iframe {
+        height: 300px;
+    }
+    
+    .dmri-info {
+        padding: 1.5rem;
+    }
+    
+    .dmri-info h3 {
+        font-size: 1.4rem;
+    }
+    
+    .dmri-info p {
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 600px) {
+    .dmri-content {
+        padding: 1rem;
+    }
+    
+    .dmri-content h2 {
+        font-size: 1.8rem;
+    }
+    
+    .video-container iframe {
+        height: 250px;
+    }
+    
+    .dmri-info {
+        padding: 1.2rem;
     }
 } 
