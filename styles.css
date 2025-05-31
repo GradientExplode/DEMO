@@ -1082,4 +1082,62 @@ footer {
     .dmri-info {
         padding: 1.2rem;
     }
+}
+
+.blender-info {
+    background: rgba(255, 255, 255, 0.5);
+    padding: 2rem;
+    border-radius: 16px;
+    box-shadow: 0 4px 24px rgba(31, 38, 135, 0.05);
+}
+
+.blender-info h3 {
+    color: #6c63ff;
+    font-size: 1.6rem;
+    margin-bottom: 1rem;
+}
+
+.blender-info p {
+    color: #333;
+    margin-bottom: 1.2rem;
+    font-size: 1.1rem;
+    line-height: 1.6;
+}
+
+.blender-info ul {
+    list-style-type: none;
+    padding: 0;
+    margin-bottom: 1.5rem;
+}
+
+.blender-info ul li {
+    color: #444;
+    margin-bottom: 0.8rem;
+    padding-left: 1.5rem;
+    position: relative;
+    font-size: 1.1rem;
+    line-height: 1.5;
+}
+
+.blender-info ul li:before {
+    content: "•";
+    color: #6c63ff;
+    position: absolute;
+    left: 0;
+    font-size: 1.2rem;
+}
+
+@media (max-width: 768px) {
+    .blender-info {
+        padding: 1.5rem;
+    }
+    
+    .blender-info h3 {
+        font-size: 1.4rem;
+    }
+    
+    .blender-info p,
+    .blender-info ul li {
+        font-size: 1rem;
+    }
 } 
