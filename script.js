@@ -199,6 +199,18 @@ async function handleStreamResponse(response, messageDiv) {
   typingDotsSpan.innerHTML = '<span class="typing-dot"></span><span class="typing-dot"></span><span class="typing-dot"></span>';
   messageContent.appendChild(typingDotsSpan);
 
+  // Helper function for smooth scrolling
+  const scrollToBottom = () => {
+    if (!chatMessages) return;
+    // Use requestAnimationFrame to ensure DOM has updated
+    requestAnimationFrame(() => {
+      chatMessages.scrollTo({
+        top: chatMessages.scrollHeight,
+        behavior: 'smooth'
+      });
+    });
+  };
+
   try {
     const reader = response.body.getReader();
     const decoder = new TextDecoder();
@@ -220,9 +232,9 @@ async function handleStreamResponse(response, messageDiv) {
             const content = parsed.choices[0]?.delta?.content || '';
             if (content) {
               accumulatedContent += content;
-              // Continuously update partial content (with typing dots)
+              // Update content and scroll
               messageContent.innerHTML = formatMessage(accumulatedContent) + '<span class="typing-dots"></span>';
-              chatMessages.scrollTop = chatMessages.scrollHeight;
+              scrollToBottom();
             }
           } catch (e) {
             console.error('Error parsing streaming data:', e);
@@ -233,19 +245,21 @@ async function handleStreamResponse(response, messageDiv) {
   } catch (error) {
     console.error('Error reading stream:', error);
     messageContent.innerHTML = formatMessage(accumulatedContent) + '<br><span style="color: red;">Error: Stream interrupted</span>';
+    scrollToBottom();
   }
 
   // Remove typing indicator dots
   const dots = messageContent.querySelector('.typing-dots');
   if (dots) dots.remove();
 
-  // Final render without dots (and with proper Markdown→HTML)
+  // Final render without dots
   messageContent.innerHTML = formatMessage(accumulatedContent);
-  chatMessages.scrollTop = chatMessages.scrollHeight;
+  scrollToBottom();
 
-  // Typeset final LaTeX
+  // Typeset final LaTeX and scroll one more time after typesetting
   if (window.MathJax && window.MathJax.typesetPromise) {
-    MathJax.typesetPromise([messageContent]).catch((err) => console.error('MathJax typeset failed:', err));
+    await MathJax.typesetPromise([messageContent]).catch((err) => console.error('MathJax typeset failed:', err));
+    scrollToBottom();
   }
 
   return accumulatedContent;
@@ -253,7 +267,7 @@ async function handleStreamResponse(response, messageDiv) {
 
 /**
  * sendToOpenRouter(message):
- *   - Appends the user’s message
+ *   - Appends the user's message
  *   - Sends a streaming request
  *   - Renders the streaming assistant's response (including LaTeX)
  */
