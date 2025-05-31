@@ -45,7 +45,7 @@
 
   <!-- ====================== HERO/VIDEO ====================== -->
   <section class="hero-section">
-    <video class="hero-video" preload="auto" autoplay muted loop playsinline>
+    <video class="hero-video" preload="auto" autoplay muted loop playsinline onloadstart="this.classList.add('loading')" oncanplay="this.classList.remove('loading')">
       <source src="video/background.mp4" type="video/mp4" />
     </video>
     <div class="hero-title">
