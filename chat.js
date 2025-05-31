@@ -6,7 +6,7 @@ const OPENROUTER_API_URL = 'https://openrouter.ai/api/v1/chat/completions';
 const MODEL = 'qwen/qwen-2.5-coder-32b-instruct';
 
 // Make sure the OPENROUTER_API_KEY is set in your environment
-const API_KEY = process.env.OPENROUTER_API_KEY;
+const API_KEY = import.meta.env.VITE_OPENROUTER_API_KEY;
 if (!API_KEY) {
   console.error('OpenRouter API key is not set. Please set the OPENROUTER_API_KEY environment variable.');
   document.body.innerHTML = `
