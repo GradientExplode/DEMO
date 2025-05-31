@@ -35,7 +35,7 @@ jobs:
 
       - name: Add OpenRouter Key
         run: |
-          echo ${{ secrets.OPENROUTER_KEY }} > .env
+          echo ${{ secrets.OPENROUTER_KEY }} > dist/.env
 
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v3
