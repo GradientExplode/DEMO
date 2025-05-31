@@ -140,7 +140,203 @@ function createMeshViewer(containerId, plyPath, color = 0x2d2d8f) {
     }
 }
 
+// --- AI Chat Assistant Logic ---
+
+// Configuration
+const OPENROUTER_API_URL = 'https://openrouter.ai/api/v1/chat/completions';
+const MODEL = 'qwen/qwen-2.5-coder-32b-instruct';
+
+// Check for API key (Consider a more secure way to handle API keys in production)
+const API_KEY = process.env.OPENROUTER_API_KEY;
+if (!API_KEY) {
+    console.error('OpenRouter API key is not set. Please set the OPENROUTER_API_KEY environment variable.');
+    // Optionally display an error message in the chat UI itself
+}
+
+// DOM Elements
+const chatMessages = document.getElementById('chat-messages');
+const chatInput = document.getElementById('chat-input');
+const sendButton = document.getElementById('send-button');
+
+// Message history
+let messageHistory = [
+    {
+        role: 'system',
+        content: 'You are a helpful AI coding assistant. You provide clear, concise, and accurate responses to programming-related questions.'
+    }
+];
+
+// Function to format code blocks in messages
+function formatMessage(content) {
+    // Replace code blocks with formatted HTML
+    return content.replace(/```(\w+)?\n([\s\S]*?)```/g, (match, language, code) => {
+        // Basic HTML escaping for the code content
+        const escapedCode = code.trim().replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#039;');
+        return `<div class="code-block">${escapedCode}</div>`;
+    });
+}
+
+// Function to add a message to the chat
+function addMessage(content, isUser = false) {
+    if (!chatMessages) return; // Check if chat container exists
+
+    const messageDiv = document.createElement('div');
+    messageDiv.className = `message ${isUser ? 'user-message' : 'bot-message'}`;
+    
+    const messageContent = document.createElement('div');
+    messageContent.className = 'message-content';
+    messageContent.innerHTML = formatMessage(content); // Use innerHTML to render formatted content
+    
+    messageDiv.appendChild(messageContent);
+    chatMessages.appendChild(messageDiv);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+    
+    return messageDiv;
+}
+
+// Function to handle streaming response
+async function handleStreamResponse(response, messageDiv) {
+    const messageContent = messageDiv.querySelector('.message-content');
+    let accumulatedContent = '';
+    
+    // Add typing indicator dots - ensure messageContent is clear first if it had temporary dots
+     messageContent.innerHTML = ''; // Clear placeholder/dots if any
+    const typingDotsSpan = document.createElement('span');
+    typingDotsSpan.className = 'typing-dots';
+    typingDotsSpan.innerHTML = '<span class="typing-dot"></span><span class="typing-dot"></span><span class="typing-dot"></span>';
+    messageContent.appendChild(typingDotsSpan);
+
+    try {
+        const reader = response.body.getReader();
+        const decoder = new TextDecoder();
+        
+        while (true) {
+            const { value, done } = await reader.read();
+            if (done) break;
+            
+            const chunk = decoder.decode(value);
+            const lines = chunk.split('\n');
+            
+            for (const line of lines) {
+                if (line.startsWith('data: ')) {
+                    const data = line.slice(6);
+                    if (data === '[DONE]') continue;
+                    
+                    try {
+                        const parsed = JSON.parse(data);
+                        const content = parsed.choices[0]?.delta?.content || '';
+                        if (content) {
+                            accumulatedContent += content;
+                             // Update content, keeping dots until done
+                            messageContent.innerHTML = formatMessage(accumulatedContent) + '<span class="typing-dots"></span>';
+                            if (messageContent.querySelector('.typing-dots')) { // Ensure dots are still there before trying to append
+                                messageContent.querySelector('.typing-dots').innerHTML = '<span class="typing-dot"></span><span class="typing-dot"></span><span class="typing-dot"></span>';
+                            }
+                            chatMessages.scrollTop = chatMessages.scrollHeight;
+                        }
+                    } catch (e) {
+                        console.error('Error parsing streaming data:', e);
+                    }
+                }
+            }
+        }
+    } catch (error) {
+        console.error('Error reading stream:', error);
+        messageContent.innerHTML = formatMessage(accumulatedContent) + '<br><span style="color: red;">Error: Stream interrupted</span>';
+    }
+    
+    // Remove typing indicator dots
+    const dots = messageContent.querySelector('.typing-dots');
+    if(dots) {
+        dots.remove();
+    }
+     messageContent.innerHTML = formatMessage(accumulatedContent); // Final render without dots
+
+    return accumulatedContent;
+}
+
+// Function to send message to OpenRouter API
+async function sendToOpenRouter(message) {
+     if (!chatMessages) return; // Check if chat container exists
+
+    try {
+        // Add user message to chat
+        addMessage(message, true);
+        
+        // Create bot message placeholder
+        const botMessageDiv = addMessage('', false);
+        const messageContent = botMessageDiv.querySelector('.message-content');
+        
+        // Ensure message history is properly formatted
+        const currentMessages = messageHistory.map(msg => ({
+            role: msg.role,
+            content: msg.content
+        }));
+
+        const requestBody = {
+            model: MODEL,
+            provider: {
+                only: ["nebius/fp8"]
+            },
+            messages: [...currentMessages, { role: 'user', content: message }],
+            temperature: 0.7,
+            max_tokens: 1000,
+            stream: true
+        };
+
+        // Make the streaming request
+        const response = await fetch(OPENROUTER_API_URL, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${API_KEY}`,
+                'Content-Type': 'application/json',
+                'HTTP-Referer': window.location.origin,
+                'X-Title': 'AI Chat Assistant'
+            },
+            body: JSON.stringify(requestBody)
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        // Handle the streaming response
+        const botResponse = await handleStreamResponse(response, botMessageDiv);
+        
+        // Update message history
+        messageHistory.push({ role: 'user', content: message });
+        messageHistory.push({ role: 'assistant', content: botResponse });
+        
+    } catch (error) {
+        console.error('Error:', error);
+        let errorMessage = 'Sorry, I encountered an error while processing your request.';
+        if (error.response) {
+            console.error('API Error Response:', {
+                status: error.response.status,
+                statusText: error.response.statusText,
+                data: error.response.data,
+                headers: error.response.headers
+            });
+            errorMessage = `Error: ${error.response.status} - ${error.response.data?.error?.message || 'Unknown error'}`;
+        } else if (error.request) {
+            console.error('No response received:', error.request);
+            errorMessage = 'Error: No response received from the server. Please check your internet connection.';
+        } else {
+            console.error('Error setting up request:', error.message);
+        }
+        addMessage(errorMessage);
+    } finally {
+        // Re-enable input
+         if(chatInput) chatInput.disabled = false;
+         if(sendButton) sendButton.disabled = false;
+         if(chatInput) chatInput.focus();
+    }
+}
+
+// Event Listeners
+// Add event listeners after the DOM is fully loaded
 window.addEventListener('DOMContentLoaded', () => {
+    // Existing Three.js setup
     createMeshViewer('axon-viewer', 'mesh/axon.ply', 0x6c63ff);
     createMeshViewer('soma-viewer', 'mesh/soma.ply', 0x6c63ff);
     createMeshViewer('axonbox-viewer', 'mesh/axonbox_low.ply', 0x6c63ff);
@@ -163,5 +359,35 @@ window.addEventListener('DOMContentLoaded', () => {
     const dmriInner = document.querySelector('.dmri-inner');
     if (dmriInner) {
         observer.observe(dmriInner);
+    }
+
+    // Chat Assistant Initialization
+    if (chatInput && sendButton) {
+        // Add welcome message when the page loads
+        addMessage("Hello! I'm your AI coding assistant. How can I help you today?", false);
+
+        sendButton.addEventListener('click', async () => {
+            const message = chatInput.value.trim();
+            if (!message) return;
+
+            // Clear input and disable it while processing
+            chatInput.value = '';
+            chatInput.disabled = true;
+            sendButton.disabled = true;
+            
+            await sendToOpenRouter(message);
+            
+            // Re-enable input is handled in finally block of sendToOpenRouter
+        });
+
+        chatInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendButton.click();
+            }
+        });
+
+        // Focus input on page load
+        chatInput.focus();
     }
 }); 

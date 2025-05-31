@@ -1,240 +1,196 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Brain Imaging Toolbox - via Meshing and dMRI Simulating</title>
-    <link rel="stylesheet" href="styles.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Brain Imaging Toolbox</title>
+  <link rel="stylesheet" href="styles.css">
+
+  <!-- 1) Load Marked.js from CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+  <!-- 2) Configure MathJax BEFORE loading the MathJax script -->
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        processEscapes: true,
+        processEnvironments: true
+      },
+      options: {
+        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+      }
+    };
+  </script>
+  <!-- 3) Load MathJax -->
+  <script
+    id="MathJax-script"
+    async
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+  </script>
+
+  <!-- 4) (Optional) GSAP, ScrollTrigger, etc., if you still need them for other parts of your page. -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
+
 </head>
 <body>
-    <section class="hero-section">
-        <video class="hero-video" preload="auto" autoplay muted loop playsinline>
-            <source src="video/background.mp4" type="video/mp4">
-        </video>
-        <div class="hero-title">
-            <h1>Brain Imaging Toolbox</h1>
-            <p>via Meshing and dMRI Simulating</p>
-        </div>
-    </section>
-    <section class="mesh-section">
-        <div class="mesh-inner">
-            <div class="mesh-content glass">
-                <h2>Brain Mesh Construction</h2>
-                <div class="axon-mesh-branching">
-                    <div class="grid-container">
-                        <!-- First row -->
-                        <div class="grid-row">
-                            <div class="axon-block axon-base" id="axon-base-block">
-                                <div class="axon-label">Axon (Base)</div>
-                                <div class="mesh-viewer" id="axon-viewer"></div>
-                            </div>
-                            <div class="axon-block axon-box" id="axon-box-block">
-                                <div class="axon-label">Axon Box</div>
-                                <div class="mesh-viewer" id="axonbox-viewer"></div>
-                            </div>
-                            <div class="axon-block axon-crossing" id="axon-crossing-block">
-                                <div class="axon-label">Axon Crossing</div>
-                                <div class="mesh-viewer" id="axoncrossing-viewer"></div>
-                            </div>
-                        </div>
-                        <!-- Second row -->
-                        <div class="grid-row">
-                            <div class="axon-block soma-base" id="soma-base-block">
-                                <div class="axon-label">Soma (Base)</div>
-                                <div class="mesh-viewer" id="soma-viewer"></div>
-                            </div>
-                            <div class="axon-block soma-process" id="soma-process-block">
-                                <div class="axon-label">Soma Process</div>
-                                <div class="mesh-viewer" id="somaprocess-viewer"></div>
-                            </div>
-                            <div class="axon-block soma-branching" id="soma-branching-block">
-                                <div class="axon-label">Soma Branching</div>
-                                <div class="mesh-viewer" id="somabranching-viewer"></div>
-                            </div>
-                        </div>
-                    </div>
-                    <svg class="axon-branch-svg" id="axon-branch-svg" width="100%" height="100%" style="position:absolute;top:0;left:0;pointer-events:none;z-index:1;"></svg>
-                </div>
-                <div class="mesh-explanation">
-                    <div class="mesh-info">
-                        <div class="mesh-type">
-                            <div class="blender-info">
-                                <img src="images/Logo_Blender.png" alt="Blender Logo" style="height: 60px; margin-bottom: 1rem;">
-                                <h3>Mesh Construction with Blender</h3>
-                                <p>We use Blender's powerful 3D modeling capabilities to create neural meshes through a custom parameterized workflow. This approach allows us to:</p>
-                                <ul>
-                                    <li>Generate neural structures with adjustable parameters</li>
-                                    <li>Create realistic axon and soma networks</li>
-                                    <li>Export optimized meshes for dMRI simulation</li>
-                                </ul>
-                                <p>Our workflow streamlines the creation of neural structures, from simple axon bundles to complex branching patterns, ensuring precise geometric properties for accurate dMRI simulation.</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-    <section class="dmri-section">
-        <div class="dmri-inner">
-            <div class="dmri-content glass">
-                <h2>Understanding dMRI</h2>
-                <div class="video-container">
-                    <iframe 
-                        width="100%" 
-                        height="500" 
-                        src="https://www.youtube.com/embed/Be51OqnBbdc" 
-                        title="Understanding dMRI" 
-                        frameborder="0" 
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                        allowfullscreen>
-                    </iframe>
-                </div>
-                <div class="dmri-explanation">
-                    <div class="dmri-info">
-                        <h3>What is Diffusion MRI?</h3>
-                        <p>Diffusion MRI (dMRI) is a specialized magnetic resonance imaging technique that measures the random motion of water molecules in biological tissues. This motion is influenced by the tissue's microstructure, particularly the orientation and organization of nerve fibers in the brain.</p>
-                        
-                        <h3>Key Concepts in dMRI</h3>
-                        <ul>
-                            <li><strong>Water Diffusion</strong>: Water molecules naturally move in random directions, but their movement is restricted by tissue structures</li>
-                            <li><strong>Anisotropic Diffusion</strong>: In white matter, water moves more freely along nerve fibers than across them</li>
-                            <li><strong>Diffusion Tensor Imaging (DTI)</strong>: A common dMRI technique that models water diffusion as a 3D ellipsoid</li>
-                            <li><strong>Fiber Tractography</strong>: The process of reconstructing neural pathways based on diffusion data</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-    <div class="main-content curved-edge">
-        <section class="info-section glass">
-            <h2>Mesh Construction Process</h2>
-            <div class="mesh-info">
-                <div class="mesh-type">
-                    <h3>Axon Network Construction</h3>
-                    <ul>
-                        <li><strong>Axon Box</strong>: Created by arranging multiple axon.ply meshes in a box-like pattern, simulating axon bundles in white matter tracts</li>
-                        <li><strong>Axon Crossing</strong>: Generated by intersecting multiple axon.ply meshes at different angles, representing crossing fiber pathways in the brain</li>
-                    </ul>
-                </div>
-                <div class="mesh-type">
-                    <h3>Soma Network Development</h3>
-                    <ul>
-                        <li><strong>Soma Process</strong>: Extends the base soma.ply with dendritic processes, showing basic neuronal morphology</li>
-                        <li><strong>Soma Branching</strong>: Complex branching patterns created by combining multiple soma.ply meshes with varying dendritic arborizations</li>
-                    </ul>
-                </div>
-            </div>
-        </section>
+  <!-- ====================== NAVBAR ====================== -->
+  <nav class="main-nav glass">
+    <div class="nav-content">
+      <a href="index.html" class="nav-logo">Brain Imaging Toolbox</a>
+      <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="#ai-assistant-section">AI Assistant</a>
+      </div>
     </div>
-    <footer>
-        <p>dMRI Toolbox • Interactive Neural Mesh Visualization</p>
-    </footer>
-    <script type="module" src="script.js"></script>
-    <script>
-    function updateAxonBranchLines() {
-        const base = document.getElementById('axon-base-block');
-        const box = document.getElementById('axon-box-block');
-        const crossing = document.getElementById('axon-crossing-block');
-        const soma = document.getElementById('soma-base-block');
-        const somaProcess = document.getElementById('soma-process-block');
-        const somaBranching = document.getElementById('soma-branching-block');
-        const svg = document.getElementById('axon-branch-svg');
-        if (!base || !box || !crossing || !soma || !somaProcess || !somaBranching || !svg) return;
-        
-        const parentRect = svg.parentElement.getBoundingClientRect();
-        const baseRect = base.getBoundingClientRect();
-        const boxRect = box.getBoundingClientRect();
-        const crossingRect = crossing.getBoundingClientRect();
-        const somaRect = soma.getBoundingClientRect();
-        const somaProcessRect = somaProcess.getBoundingClientRect();
-        const somaBranchingRect = somaBranching.getBoundingClientRect();
-        
-        // Calculate arrow points relative to parent
-        const arrowSize = 8; // Size of the arrow head
-        
-        // Axon connections (sequential)
-        const axonStart = {
-            x: baseRect.right - parentRect.left,
-            y: baseRect.top + baseRect.height/2 - parentRect.top
-        };
-        const axonBoxStart = {
-            x: boxRect.right - parentRect.left,
-            y: boxRect.top + boxRect.height/2 - parentRect.top
-        };
-        const axonBoxEnd = {
-            x: boxRect.left - parentRect.left,
-            y: boxRect.top + boxRect.height/2 - parentRect.top
-        };
-        const axonCrossingEnd = {
-            x: crossingRect.left - parentRect.left,
-            y: crossingRect.top + crossingRect.height/2 - parentRect.top
-        };
-        
-        // Soma connections (sequential)
-        const somaStart = {
-            x: somaRect.right - parentRect.left,
-            y: somaRect.top + somaRect.height/2 - parentRect.top
-        };
-        const somaProcessStart = {
-            x: somaProcessRect.right - parentRect.left,
-            y: somaProcessRect.top + somaProcessRect.height/2 - parentRect.top
-        };
-        const somaProcessEnd = {
-            x: somaProcessRect.left - parentRect.left,
-            y: somaProcessRect.top + somaProcessRect.height/2 - parentRect.top
-        };
-        const somaBranchingEnd = {
-            x: somaBranchingRect.left - parentRect.left,
-            y: somaBranchingRect.top + somaBranchingRect.height/2 - parentRect.top
-        };
-        
-        // Calculate arrow angles
-        const axonBoxAngle = Math.atan2(axonBoxEnd.y - axonStart.y, axonBoxEnd.x - axonStart.x);
-        const axonCrossingAngle = Math.atan2(axonCrossingEnd.y - axonBoxStart.y, axonCrossingEnd.x - axonBoxStart.x);
-        const somaProcessAngle = Math.atan2(somaProcessEnd.y - somaStart.y, somaProcessEnd.x - somaStart.x);
-        const somaBranchingAngle = Math.atan2(somaBranchingEnd.y - somaProcessStart.y, somaBranchingEnd.x - somaProcessStart.x);
-        
-        // Calculate arrow head points
-        const createArrowHead = (endX, endY, angle) => {
-            const x1 = endX - arrowSize * Math.cos(angle - Math.PI/6);
-            const y1 = endY - arrowSize * Math.sin(angle - Math.PI/6);
-            const x2 = endX - arrowSize * Math.cos(angle + Math.PI/6);
-            const y2 = endY - arrowSize * Math.sin(angle + Math.PI/6);
-            return `M ${endX} ${endY} L ${x1} ${y1} L ${x2} ${y2} Z`;
-        };
-        
-        svg.setAttribute('width', parentRect.width);
-        svg.setAttribute('height', parentRect.height);
-        svg.innerHTML = `
-            <!-- Axon connections (sequential) -->
-            <path d="M ${axonStart.x} ${axonStart.y} L ${axonBoxEnd.x} ${axonBoxEnd.y}" 
-                  stroke="#2d2d8f" stroke-width="2.5" fill="none"/>
-            <path d="${createArrowHead(axonBoxEnd.x, axonBoxEnd.y, axonBoxAngle)}" 
-                  fill="#2d2d8f"/>
-            <path d="M ${axonBoxStart.x} ${axonBoxStart.y} L ${axonCrossingEnd.x} ${axonCrossingEnd.y}" 
-                  stroke="#2d2d8f" stroke-width="2.5" fill="none"/>
-            <path d="${createArrowHead(axonCrossingEnd.x, axonCrossingEnd.y, axonCrossingAngle)}" 
-                  fill="#2d2d8f"/>
-            
-            <!-- Soma connections (sequential) -->
-            <path d="M ${somaStart.x} ${somaStart.y} L ${somaProcessEnd.x} ${somaProcessEnd.y}" 
-                  stroke="#6c63ff" stroke-width="2.5" fill="none"/>
-            <path d="${createArrowHead(somaProcessEnd.x, somaProcessEnd.y, somaProcessAngle)}" 
-                  fill="#6c63ff"/>
-            <path d="M ${somaProcessStart.x} ${somaProcessStart.y} L ${somaBranchingEnd.x} ${somaBranchingEnd.y}" 
-                  stroke="#6c63ff" stroke-width="2.5" fill="none"/>
-            <path d="${createArrowHead(somaBranchingEnd.x, somaBranchingEnd.y, somaBranchingAngle)}" 
-                  fill="#6c63ff"/>
-        `;
-    }
+  </nav>
 
-    window.addEventListener('DOMContentLoaded', updateAxonBranchLines);
-    window.addEventListener('resize', updateAxonBranchLines);
-    setTimeout(updateAxonBranchLines, 500);
-    </script>
+  <!-- ====================== HERO/VIDEO ====================== -->
+  <section class="hero-section">
+    <video class="hero-video" preload="auto" autoplay muted loop playsinline>
+      <source src="video/background.mp4" type="video/mp4" />
+    </video>
+    <div class="hero-title">
+      <h1>Brain Imaging Toolbox</h1>
+      <p>via Meshing and dMRI Simulating</p>
+    </div>
+  </section>
+
+  <!-- ====================== dMRI EXPLANATION ====================== -->
+  <section class="dmri-section">
+    <div class="dmri-inner">
+      <div class="dmri-content glass">
+        <h2>Understanding dMRI</h2>
+        <div class="video-container">
+          <iframe
+            width="100%"
+            height="500"
+            src="https://www.youtube.com/embed/Be51OqnBbdc"
+            title="Understanding dMRI"
+            frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen>
+          </iframe>
+        </div>
+        <div class="dmri-explanation">
+          <div class="dmri-info">
+            <h3>What is Diffusion MRI?</h3>
+            <p>
+              Diffusion MRI (dMRI) is a specialized magnetic resonance imaging technique that
+              measures the random motion of water molecules in biological tissues. This motion is
+              influenced by the tissue's microstructure, particularly the orientation and organization
+              of nerve fibers in the brain.
+            </p>
+            <h3>Key Concepts in dMRI</h3>
+            <ul>
+              <li><strong>Water Diffusion</strong>: Water molecules naturally move in random directions, but their movement is restricted by tissue structures.</li>
+              <li><strong>Anisotropic Diffusion</strong>: In white matter, water moves more freely along nerve fibers than across them.</li>
+              <li><strong>Diffusion Tensor Imaging (DTI)</strong>: A common dMRI technique that models water diffusion as a 3D ellipsoid.</li>
+              <li><strong>Fiber Tractography</strong>: The process of reconstructing neural pathways based on diffusion data.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====================== MESH CONSTRUCTION ====================== -->
+  <section class="mesh-section">
+    <div class="mesh-inner">
+      <div class="mesh-content glass">
+        <h2>Brain Mesh Construction</h2>
+        <div class="axon-mesh-branching">
+          <div class="grid-container">
+            <!-- First row -->
+            <div class="grid-row">
+              <div class="axon-block axon-base" id="axon-base-block">
+                <div class="axon-label">Axon (Base)</div>
+                <div class="mesh-viewer" id="axon-viewer"></div>
+              </div>
+              <div class="axon-block axon-box" id="axon-box-block">
+                <div class="axon-label">Axon Box</div>
+                <div class="mesh-viewer" id="axonbox-viewer"></div>
+              </div>
+              <div class="axon-block axon-crossing" id="axon-crossing-block">
+                <div class="axon-label">Axon Crossing</div>
+                <div class="mesh-viewer" id="axoncrossing-viewer"></div>
+              </div>
+            </div>
+            <!-- Second row -->
+            <div class="grid-row">
+              <div class="axon-block soma-base" id="soma-base-block">
+                <div class="axon-label">Soma (Base)</div>
+                <div class="mesh-viewer" id="soma-viewer"></div>
+              </div>
+              <div class="axon-block soma-process" id="soma-process-block">
+                <div class="axon-label">Soma Process</div>
+                <div class="mesh-viewer" id="somaprocess-viewer"></div>
+              </div>
+              <div class="axon-block soma-branching" id="soma-branching-block">
+                <div class="axon-label">Soma Branching</div>
+                <div class="mesh-viewer" id="somabranching-viewer"></div>
+              </div>
+            </div>
+          </div>
+          <svg
+            class="axon-branch-svg"
+            id="axon-branch-svg"
+            width="100%"
+            height="100%"
+            style="position:absolute; top:0; left:0; pointer-events:none; z-index:1;">
+          </svg>
+        </div>
+        <div class="mesh-explanation">
+          <div class="mesh-info">
+            <div class="mesh-type">
+              <div class="blender-info">
+                <img
+                  src="images/Logo_Blender.png"
+                  alt="Blender Logo"
+                  style="height: 60px; margin-bottom: 1rem;" />
+                <h3>Mesh Construction with Blender</h3>
+                <p>We use Blender's powerful 3D modeling capabilities to create neural meshes through a custom parameterized workflow. This approach allows us to:</p>
+                <ul>
+                  <li>Generate neural structures with adjustable parameters</li>
+                  <li>Create realistic axon and soma networks</li>
+                  <li>Export optimized meshes for dMRI simulation</li>
+                </ul>
+                <p>Our workflow streamlines the creation of neural structures, from simple axon bundles to complex branching patterns, ensuring precise geometric properties for accurate dMRI simulation.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====================== AI CHAT ASSISTANT ====================== -->
+  <div class="chat-container" id="ai-assistant-section">
+    <div class="chat-header">
+      <h1>AI Chat Assistant</h1>
+    </div>
+    <div class="chat-messages" id="chat-messages">
+      <!-- Messages (bot and user) will be appended here -->
+    </div>
+    <div class="chat-input-container">
+      <textarea id="chat-input" placeholder="Type your message here..." autocomplete="off"></textarea>
+      <button id="send-button">
+        <span>Send</span>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M22 2L11 13M22 2L15 22L11 13L2 9L22 2Z" />
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- ====================== MAIN CONTENT ====================== -->
+  <footer>
+    <p>dMRI Toolbox • Interactive Neural Mesh Visualization</p>
+  </footer>
+
+  <!-- 5) Your own script that handles chat + Markdown/LaTeX rendering -->
+  <script type="module" src="script.js"></script>
 </body>
 </html>
