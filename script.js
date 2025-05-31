@@ -387,7 +387,7 @@ window.addEventListener('DOMContentLoaded', () => {
             }
         });
 
-        // Focus input on page load
-        chatInput.focus();
+        // Remove automatic focus
+        // chatInput.focus();
     }
 }); 
