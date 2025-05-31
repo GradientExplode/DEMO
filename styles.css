@@ -650,17 +650,20 @@
     border: 1px solid rgba(255, 255, 255, 0.2);
   }
   
+  /* ─── Messages themselves ───────────────────────────────────────────── */
   .message {
     margin-bottom: 1.2rem;
-    padding: 1.2rem;
+    padding: 0.6rem;
     border-radius: 16px;
-    max-width: 80%;
+    max-width: 95%;
     width: fit-content;
     position: relative;
     animation: messageSlide 0.3s ease-out;
     box-shadow: 0 4px 24px rgba(31, 38, 135, 0.05);
+    overflow-x: auto;
   }
   
+  /* slide-in animation */
   @keyframes messageSlide {
     from {
       opacity: 0;
@@ -672,33 +675,74 @@
     }
   }
   
-  .user-message {
+  /* ─── CONTENT INSIDE each bubble ──────────────────────────────────── */
+  /* THIS is what now contains Markdown → HTML (via `marked.parse`) + MathJax */
+  .message-content {
+    /* remove the pre-wrap from here if you only care about <p> text */
+    font-size: 1.1rem;
+    line-height: 1.6;
+    word-break: break-word;
+    display: inline-block;
+  }
+  
+  /* If it’s a user‐bubble, override background & text color */
+  .message.user-message {
     background: rgba(108, 99, 255, 0.9);
-    color: white;
     margin-left: auto;
     margin-right: 0;
     border-bottom-right-radius: 4px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .message.user-message .message-content p {
+    color: white;
+    margin: 0;
   }
   
-  .bot-message {
+  /* If it’s a bot‐bubble, slightly different border */
+  .message.bot-message {
     background: rgba(255, 255, 255, 0.9);
-    color: #2c3e50;
     margin-right: auto;
     margin-left: 0;
     border-bottom-left-radius: 4px;
     border: 1px solid rgba(108, 99, 255, 0.1);
   }
-  
-  .message-content {
-    font-size: 1.1rem;
-    line-height: 1.6;
-    white-space: pre-wrap; /* preserve line breaks */
-    word-break: break-word;
+
+  .message.bot-message .message-content p {
+    color: #2c3e50;
+    margin: 0;
   }
   
   /*─────────────────────────────────────────────────────────────────────
     ── MARKDOWN ELEMENT STYLING ─────────────────────────────────────────
   ─────────────────────────────────────────────────────────────────────*/
+  /* Reset any global extra bullet (::before) for <li> inside chat bubbles */
+  .message-content li::before {
+    content: none !important;
+  }
+  
+  /* Explicitly style ordered lists inside a bubble */
+  .message-content ol {
+    list-style-type: decimal;
+    list-style-position: inside;
+    margin: 1rem 0 1rem 1.5rem; /* vertical spacing + indent */
+    padding: 0;
+  }
+  
+  /* Explicitly style unordered lists inside a bubble */
+  .message-content ul {
+    list-style-type: disc;
+    list-style-position: inside;
+    margin: 1rem 0 1rem 1.5rem; /* vertical spacing + indent */
+    padding: 0;
+  }
+
+  .message-content p {
+    white-space: pre-wrap; /* only preserve line breaks inside the actual paragraph */
+    margin: 0;             /* kill the browser’s default <p> top/bottom margin */
+  }
+  
+  /* Headings, paragraphs, code, tables, blockquotes, etc. (all via marked.parse) */
   .message-content h1,
   .message-content h2,
   .message-content h3,
@@ -706,10 +750,9 @@
   .message-content h5,
   .message-content h6 {
     color: inherit;
-    margin: 1.5rem 0 1rem;
+    margin: 1rem 0 0.5rem;
     line-height: 1.3;
   }
-  
   .message-content h1 { font-size: 1.8rem; }
   .message-content h2 { font-size: 1.6rem; }
   .message-content h3 { font-size: 1.4rem; }
@@ -718,17 +761,7 @@
   .message-content h6 { font-size: 1rem; }
   
   .message-content p {
-    margin: 1rem 0;
-  }
-  
-  .message-content ul,
-  .message-content ol {
-    margin: 1rem 0;
-    padding-left: 2rem;
-  }
-  
-  .message-content li {
-    margin: 0.5rem 0;
+    margin: 0.75rem 0;
   }
   
   .message-content blockquote {
@@ -792,9 +825,7 @@
     background: rgba(108, 99, 255, 0.05);
   }
   
-  /*─────────────────────────────────────────────────────────────────────
-    ── CODE-BLOCK UTILITY (FOR FENCED CODE) ─────────────────────────────
-  ─────────────────────────────────────────────────────────────────────*/
+  /* If you use fenced‐code styles via a `.code-block` wrapper: */
   .code-block {
     background: rgba(0, 0, 0, 0.05);
     padding: 1.2rem;
@@ -1040,11 +1071,11 @@
     }
   
     #chat-input {
-        padding: 1rem;
-      }
-    
+      padding: 1rem;
+    }
+  
     #send-button {
-        padding: 1rem 1.5rem;
+      padding: 1rem 1.5rem;
     }
   }
   
@@ -1162,4 +1193,5 @@
       transform: translateY(0);
     }
   }
+  
   
