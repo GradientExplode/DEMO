@@ -1269,6 +1269,8 @@
       min-height: 400px;
     }
 
+    /* Toolbox Section */
+
     .mesh-section {
         padding-top: 1rem;
         padding-bottom: 0;
@@ -1286,6 +1288,44 @@
     .mesh-button {
       padding: 0.7rem 1rem;
       font-size: 0.95rem;
+    }
+
+    /* 1) Make the container ‘relative’ so the absolutely‐positioned
+    .toolbox-center is pinned within it */
+    .toolbox-diagram {
+        position: relative;
+        max-height: 400px;
+    }
+
+    /* 2) Absolutely place and rotate the center box */
+    .toolbox-center {
+        position: absolute; 
+        /* Tweak these two values until the rotated bar lands in your red circle */
+        top: 150px;    /* ↓ adjust this down/up to move the bar vertically */
+        left: -125px;    /* ← adjust this left/right to move the bar horizontally */
+
+        transform: rotate(-90deg);
+        transform-origin: center center; 
+        white-space: nowrap;  /* keep text on one line when rotated */
+        margin: 0;            /* cancel any default margins so positioning is exact */
+        padding: 1rem 2rem;   /* keep your original padding so the shape stays the same */
+    }
+
+    /* 3) Remove extra top‐margin on components so they don’t shift down unexpectedly */
+    .components-container {
+        margin-top: 0;
+    }
+
+    /* 4) Absolutely position the components stack */
+    .components-container {
+        position: absolute;
+        /* Tweak these until the “Meshing / dMRI Simulating / AI Coding Assistant” stack
+        sits exactly where you want (to the right of that rotated bar) */
+
+        top: -100px;   /* ↓ adjust to move the stack up or down */
+        left: 75px;  /* ← adjust to move the stack left or right */
+
+        margin-top: 0; /* cancel any extra built-in top margin */
     }
   
     /* dMRI adjustments */

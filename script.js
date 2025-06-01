@@ -430,72 +430,72 @@ function debounce(func, wait) {
 
 // Function to draw connecting lines between toolbox components
 function drawToolboxLines() {
-    const svg       = document.querySelector('.component-lines');
-    const centerEl  = document.querySelector('.toolbox-center');
-    const comps     = document.querySelectorAll('.component');
-    const container = document.querySelector('.components-container');
-    if (!svg || !centerEl || comps.length === 0 || !container) return;
-  
-    // 1) clear out any existing paths
-    svg.innerHTML = '';
-  
-    // Get container's top‐left (so we can work in its coordinate space)
-    const cRect   = container.getBoundingClientRect();
-    const ctrRect = centerEl.getBoundingClientRect();
-    // Center point of the “Brain Imaging Toolbox” box, relative to CONTAINER:
-    const ctrX    = ctrRect.left + ctrRect.width  / 2 - cRect.left;
-    const ctrY    = ctrRect.top  + ctrRect.height / 2 - cRect.top;
-  
-    // For each component, compute its center (relative to the same container),
-    // then draw a quadratic Bézier from (ctrX, ctrY) → (pX, pY).
-    comps.forEach(comp => {
-      const r  = comp.getBoundingClientRect();
-      // Center of this component box, also relative to container:
-      const pX = r.left + r.width  / 2 - cRect.left;
-      const pY = r.top  + r.height / 2 - cRect.top;
-  
-      // Vector from center to component:
-      const dx  = pX - ctrX;
-      const dy  = pY - ctrY;
-      // Distance (never zero because boxes are distinct):
-      const dist = Math.hypot(dx, dy) || 1;
-      // Unit direction vector
-      const ux  = dx / dist;
-      const uy  = dy / dist;
-  
-      // Pick a “curve magnitude” proportional to the distance
-      // (you can tweak 0.15 → 0.2 etc. to make the arc more or less pronounced)
-      const curve = dist * 0.15;
-  
-      // A perpendicular vector to (ux, uy):
-      let perpX = -uy;
-      let perpY = ux;
-  
-      // ──────────────────────────────────────────────────────────────────────
-      // *** NEW: if the component is on the RIGHT side of center, flip perp ***
-      // This makes the right‐most box curve to the right.
-      if (dx > 0) {
-        perpX = -perpX;
-        perpY = -perpY;
-      }
-      // ──────────────────────────────────────────────────────────────────────
-  
-      // Midpoint between (ctrX, ctrY) and (pX, pY):
-      const midX = (ctrX + pX) / 2;
-      const midY = (ctrY + pY) / 2;
-  
-      // Shift the midpoint by “curve” amount perpendicular to the line:
-      const cX = midX + perpX * curve;
-      const cY = midY + perpY * curve;
-  
-      // Build the SVG <path>:
-      const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-      path.setAttribute('d', `M ${ctrX} ${ctrY} Q ${cX} ${cY} ${pX} ${pY}`);
-      path.setAttribute('class', 'component-line');
-      svg.appendChild(path);
-    });
-  }
-  
+  const svg       = document.querySelector('.component-lines');
+  const centerEl  = document.querySelector('.toolbox-center');
+  const comps     = document.querySelectorAll('.component');
+  const container = document.querySelector('.components-container');
+  if (!svg || !centerEl || comps.length === 0 || !container) return;
+
+  // 1) clear out any existing paths
+  svg.innerHTML = '';
+
+  // Get container's top‐left (so we can work in its coordinate space)
+  const cRect   = container.getBoundingClientRect();
+  const ctrRect = centerEl.getBoundingClientRect();
+  // Center point of the “Brain Imaging Toolbox” box, relative to CONTAINER:
+  const ctrX    = ctrRect.left + ctrRect.width  / 2 - cRect.left;
+  const ctrY    = ctrRect.top  + ctrRect.height / 2 - cRect.top;
+
+  // For each component, compute its center (relative to the same container),
+  // then draw a quadratic Bézier from (ctrX, ctrY) → (pX, pY).
+  comps.forEach(comp => {
+    const r  = comp.getBoundingClientRect();
+    // Center of this component box, also relative to container:
+    const pX = r.left + r.width  / 2 - cRect.left;
+    const pY = r.top  + r.height / 2 - cRect.top;
+
+    // Vector from center to component:
+    const dx  = pX - ctrX;
+    const dy  = pY - ctrY;
+    // Distance (never zero because boxes are distinct):
+    const dist = Math.hypot(dx, dy) || 1;
+    // Unit direction vector
+    const ux  = dx / dist;
+    const uy  = dy / dist;
+
+    // Pick a “curve magnitude” proportional to the distance
+    // (you can tweak 0.15 → 0.2 etc. to make the arc more or less pronounced)
+    const curve = dist * 0.15;
+
+    // A perpendicular vector to (ux, uy):
+    let perpX = -uy;
+    let perpY = ux;
+
+    // ──────────────────────────────────────────────────────────────────────
+    // *** NEW: if the component is on the RIGHT side of center, flip perp ***
+    // This makes the right‐most box curve to the right.
+    if (dx > 0) {
+      perpX = -perpX;
+      perpY = -perpY;
+    }
+    // ──────────────────────────────────────────────────────────────────────
+
+    // Midpoint between (ctrX, ctrY) and (pX, pY):
+    const midX = (ctrX + pX) / 2;
+    const midY = (ctrY + pY) / 2;
+
+    // Shift the midpoint by “curve” amount perpendicular to the line:
+    const cX = midX + perpX * curve;
+    const cY = midY + perpY * curve;
+
+    // Build the SVG <path>:
+    const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    path.setAttribute('d', `M ${ctrX} ${ctrY} Q ${cX} ${cY} ${pX} ${pY}`);
+    path.setAttribute('class', 'component-line');
+    svg.appendChild(path);
+  });
+}
+
   
 
 // Event Listeners
