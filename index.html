@@ -25,8 +25,43 @@
     </div>
   </section>
 
+  <!-- ====================== TOOLBOX OVERVIEW ====================== -->
+  <section class="toolbox-overview-section">
+    <div class="toolbox-overview-inner glass">
+      <div class="toolbox-overview-content">
+        <h2>Brain Imaging Toolbox Overview</h2>
+
+        <!-- Interactive Toolbox Diagram -->
+        <div class="toolbox-diagram">
+          <div class="toolbox-center">Brain Imaging Toolbox</div>
+          <div class="components-container">
+            <svg class="component-lines">
+              <!-- Lines will be drawn here via JavaScript -->
+            </svg>
+            <div class="components">
+              <div class="component mesh">Meshing</div>
+              <div class="component dmri">dMRI Simulating</div>
+              <div class="component ai">AI Coding Assistant</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="toolbox-info">
+          <h3>How the Toolbox Works</h3>
+          <p>The toolbox operates through a synergistic interaction between its core components:</p>
+          <ul>
+            <li><strong>Meshing:</strong> Using Blender, we construct high-fidelity 3D models of neural structures with customizable parameters. These meshes serve as the foundational geometric data for simulations.</li>
+            <li><strong>dMRI Simulating:</strong> The generated neural meshes are used as input for simulating realistic dMRI signals, letting researchers explore how microstructure influences diffusion patterns.</li>
+            <li><strong>AI Coding Assistant:</strong> Integrated into the platform, the AI assistant supports coding tasks—from Blender scripting to simulation-data analysis.</li>
+          </ul>
+          <p>Together these components create an end-to-end workflow for neural-imaging research and development.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- ====================== dMRI EXPLANATION ====================== -->
-  <section class="dmri-section">
+  <section class="dmri-section" id="dmri-section">
     <div class="dmri-inner">
       <div class="dmri-content glass">
         <h2>Understanding dMRI</h2>
@@ -64,7 +99,7 @@
   </section>
 
   <!-- ====================== MESH CONSTRUCTION ====================== -->
-  <section class="mesh-section">
+  <section class="mesh-section" id="mesh-section">
     <div class="mesh-inner">
       <div class="mesh-content glass">
         <h2>Brain Mesh Construction</h2>
@@ -108,35 +143,31 @@
             height="100%"
             style="position:absolute; top:0; left:0; pointer-events:none; z-index:1;">
           </svg>
-        </div>
-        <div class="mesh-explanation">
-          <div class="mesh-info">
-            <div class="mesh-type">
-              <div class="blender-info">
-                <img
-                  src="images/Logo_Blender.png"
-                  alt="Blender Logo"
-                  style="height: 60px; margin-bottom: 1rem;" />
-                <h3>Mesh Construction with Blender</h3>
-                <div class="message-content">
-                    <p>We use Blender's powerful 3D modeling capabilities to create neural meshes through a custom parameterized workflow. This approach allows us to:</p>
-                    <ul>
-                      <li>Generate neural structures with adjustable parameters</li>
-                      <li>Create realistic axon and soma networks</li>
-                      <li>Export optimized meshes for dMRI simulation</li>
-                    </ul>
-                    <p>Our workflow streamlines the creation of neural structures, from simple axon bundles to complex branching patterns, ensuring precise geometric properties for accurate dMRI simulation.</p>
-                </div>
-              </div>
+      </div>
+      <div class="blender-info-wrapper">
+        <div class="blender-info">
+            <img
+              src="images/Logo_Blender.png"
+              alt="Blender Logo"
+              class="blender-logo" />
+            <h3>Mesh Construction with Blender</h3>
+            <div class="message-content">
+              <p>We use Blender's powerful 3D modeling capabilities to create neural meshes through a custom parameterized workflow. This approach allows us to:</p>
+              <ul>
+                <li>Generate neural structures with adjustable parameters</li>
+                <li>Create realistic axon and soma networks</li>
+                <li>Export optimized meshes for dMRI simulation</li>
+              </ul>
+              <p>Our workflow streamlines the creation of neural structures, from simple axon bundles to complex branching patterns, ensuring precise geometric properties for accurate dMRI simulation.</p>
             </div>
-          </div>
-        </div>
+      </div>
+      </div>          
       </div>
     </div>
   </section>
 
   <!-- ====================== AI CODING ASSISTANT ====================== -->
-   <section class="ai-assistant-section">
+   <section class="ai-assistant-section" id="ai-section">
     <div class="chat-container">
         <div class="chat-header">
           <h1>AI Coding Assistant</h1>

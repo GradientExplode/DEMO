@@ -234,6 +234,142 @@
     color: var(--text-white);
     opacity: 0.9;
   }
+
+  /*─────────────────────────────────────────────────────────────────────
+  ── TOOLBOX OVERVIEW SECTION ─────────────────────────────────────────
+─────────────────────────────────────────────────────────────────────*/
+
+.toolbox-overview-section {
+    width: 100%;
+    padding-top: 2rem;          /* matches other sections               */
+  }
+  
+  .toolbox-overview-inner {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2.5rem;            /* large desktop padding                 */
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-radius: 24px;
+    box-shadow: 0 4px 24px rgba(31, 38, 135, 0.10);
+  
+    /* entrance animation (same pattern as .mesh-inner/.dmri-inner) */
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 0.8s, transform 0.8s;
+  }
+  .toolbox-overview-section.visible .toolbox-overview-inner {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  
+  .toolbox-overview-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    text-align: left;
+  }
+  
+  /* --- Headings ----------------------------------------------------- */
+  .toolbox-overview-content h2 {
+    text-align: center;
+    font-size: var(--text-2xl);
+    color: var(--accent-color);
+    margin-bottom: 1.5rem;
+  }
+  .toolbox-overview-content h3 {
+    font-size: var(--text-xl);
+    color: var(--accent-color);
+    margin: 2rem 0 0.75rem;
+  }
+  
+  /* --- Body copy ---------------------------------------------------- */
+  .toolbox-overview-content p {
+    font-size: var(--text-base);
+    color: var(--text-secondary);
+    line-height: var(--leading-relaxed);
+    margin-bottom: 1rem;
+  }
+  
+  /* --- Lists -------------------------------------------------------- */
+  .toolbox-overview-content ul {
+    list-style-type: none;      /* remove default bullets                */
+    margin: 1rem 0;
+    padding-left: 1.5rem;
+  }
+  .toolbox-overview-content li {
+    position: relative;
+    margin-bottom: 0.75rem;
+    color: var(--text-secondary);
+    line-height: 1.5;
+  }
+  .toolbox-overview-content li::before {
+    content: "•";
+    position: absolute;
+    left: 0;
+    color: var(--accent-color);
+    font-size: 1.2rem;
+  }
+  
+  /* --- Links -------------------------------------------------------- */
+  .toolbox-overview-content a {
+    color: var(--accent-color);
+    text-decoration: none;
+    transition: color 0.25s ease;
+  }
+  .toolbox-overview-content a:hover {
+    color: var(--accent-dark);
+    text-decoration: underline;
+  }
+
+  .toolbox-info {
+    background: rgba(255, 255, 255, 0.5);
+    padding: 2rem;
+    border-radius: 16px;
+    box-shadow: 0 4px 24px rgba(31, 38, 135, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+  }
+
+  .toolbox-info h3 {
+    font-size: var(--text-xl);
+    color: var(--accent-color);
+    margin-bottom: 1rem;
+    margin-top: 0;
+  }
+  
+  .toolbox-info p {
+    font-size: var(--text-base);
+    color: var(--text-secondary);
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+  }
+  
+  .toolbox-info ul {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .toolbox-info li {
+    margin-bottom: 1rem;
+    padding-left: 1.5rem;
+    position: relative;
+    color: #444;
+    line-height: 1.5;
+  }
+  
+  .toolbox-info li::before {
+    content: "•";
+    position: absolute;
+    left: 0;
+    font-size: 1.2rem;
+    color: var(--accent-color);
+  }
+  
+  .toolbox-info strong {
+    color: var(--accent-color);
+    font-weight: 600;
+  }
   
   /*─────────────────────────────────────────────────────────────────────
     ── MESH SECTION ─────────────────────────────────────────────────────
@@ -316,51 +452,63 @@
     background: rgba(108, 99, 255, 1);
     transform: translateY(-2px);
   }
-  
-  .mesh-info {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 2rem;
-    margin-top: 1.5rem;
+
+  .blender-info-wrapper {
+    max-width: 1200px;      /* or whatever width you want */
+    margin: 0 auto;        /* centers it within .mesh-content */
+    padding: 0 2rem;       /* pushes it 2rem away from each side */
+  }
+
+  .blender-info {
+    padding: 2rem;
+    background: rgba(255,255,255,0.5);
+    border-radius: 16px;
+    box-shadow: 0 4px 24px rgba(31,38,135,0.05);
   }
   
-  .mesh-type {
-    background: rgba(255, 255, 255, 0.1);
-    padding: 1.5rem;
-    border-radius: 12px;
-    border: 1px solid rgba(255, 255, 255, 0.18);
+  .blender-logo {
+    display: block;
+    height: 60px;
+    margin-bottom: 1rem;
   }
   
-  .mesh-type h3 {
-    font-size: var(--text-xl);
+  .blender-info h3 {
     color: var(--accent-color);
+    font-size: var(--text-xl);
     margin-bottom: 1rem;
   }
   
-  .mesh-type ul {
-    list-style-type: none;
-    padding: 0;
-  }
-  
-  .mesh-type li {
+  .blender-info p {
     margin-bottom: 1rem;
-    padding-left: 1.2rem;
-    position: relative;
+    line-height: var(--leading-relaxed);
     color: var(--text-secondary);
-    line-height: 1.5;
   }
   
-  .mesh-type li:before {
+  .blender-info ul {
+    margin: 1rem 0;
+    padding-left: 1.5rem;
+  }
+  
+  .blender-info ul li {
+    margin-bottom: 0.5rem;
+    line-height: var(--leading-normal);
+    color: var(--text-secondary);
+    position: relative;
+    padding-left: 1.5rem;
+  }
+  
+  .blender-info ul li::before {
     content: "•";
-    color: #6c63ff;
+    color: var(--accent-color);
     position: absolute;
     left: 0;
+    font-size: 1.2rem;
   }
   
-  .mesh-type strong {
-    color: #6c63ff;
-    font-weight: 600;
+  .blender-info ul li::marker {
+    color: var(--accent-color);
   }
+  
   
   /*─────────────────────────────────────────────────────────────────────
     ── AXON BLOCKS (MESH VIEWERS) ───────────────────────────────────────
@@ -553,53 +701,6 @@
   .dmri-info strong {
     color: #6c63ff;
     font-weight: 600;
-  }
-  
-  .blender-info {
-    background: rgba(255, 255, 255, 0.5);
-    padding: 2rem;
-    border-radius: 16px;
-    box-shadow: 0 4px 24px rgba(31, 38, 135, 0.05);
-  }
-  
-  .blender-info h3 {
-    font-size: var(--text-xl);
-    color: var(--accent-color);
-    margin-bottom: 1rem;
-  }
-  
-  .blender-info p {
-    font-size: var(--text-base);
-    color: var(--text-secondary);
-    margin-bottom: 1.2rem;
-    line-height: 1.6;
-  }
-  
-  .blender-info ul {
-    list-style-type: none;
-    padding: 0;
-    margin-bottom: 1.5rem;
-  }
-  
-  .blender-info ul li {
-    color: #444;
-    margin-bottom: 0.8rem;
-    padding-left: 1.5rem;
-    position: relative;
-    font-size: 1.1rem;
-    line-height: 1.5;
-  }
-
-  .blender-info ul li::before {
-    content: "•";
-    color: var(--accent-color);
-    position: absolute;
-    left: 0;
-    font-size: 1.2rem;
-  }
-  
-  .blender-info ul li::marker {
-    color: var(--accent-color);
   }
   
   /*─────────────────────────────────────────────────────────────────────
@@ -1024,6 +1125,9 @@
     .hero-title p {
       font-size: var(--text-lg);
     }
+
+    /* Toolbox adjustments */
+    .toolbox-overview-inner { padding: 1.5rem; }
   
     /* Mesh container adjustments */
     #mesh-container {
@@ -1170,10 +1274,6 @@
         padding-bottom: 0;
     }
   
-    .mesh-explanation {
-      gap: 1.5rem;
-    }
-  
     .mesh-base,
     .mesh-complex {
       padding: 1.2rem;
@@ -1186,10 +1286,6 @@
     .mesh-button {
       padding: 0.7rem 1rem;
       font-size: 0.95rem;
-    }
-  
-    .mesh-info {
-      grid-template-columns: 1fr;
     }
   
     /* dMRI adjustments */
@@ -1295,6 +1391,12 @@
       height:60svh;           /* avoids iOS toolbar jumpiness */
       min-height:240px;
     }
+
+    /* Toolbox section */
+    .toolbox-overview-content h2 { font-size: var(--text-xl); }
+    .toolbox-overview-content h3 { font-size: var(--text-lg); }
+    .toolbox-info { padding: 1.5rem; }
+    .toolbox-info h3 { font-size: var(--text-lg); }
   
     /*--- 4.  mri/mesh/axon blocks -------------------------*/
     .dmri-section {
@@ -1457,6 +1559,107 @@
     
     .ai-model-info {
       padding: 1.2rem;
+    }
+  }
+  
+  /* Styles for the interactive diagram */
+  .toolbox-diagram {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 2rem;
+    position: relative;
+  }
+
+  .components-container {
+    position: relative;
+    width: 100%;
+    min-height: 150px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 2rem;  /* Add space between center and components */
+    margin-bottom: 0;
+  }
+
+  .component-lines {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;              /* behind everything else */
+    pointer-events: none;
+    overflow: visible;
+    margin-bottom: 0;
+  }
+
+  .toolbox-center {
+    background-color: var(--accent-color);
+    color: var(--text-white);
+    padding: 1rem 2rem;
+    border-radius: 12px;
+    font-size: var(--text-lg);
+    font-weight: bold;
+    margin-bottom: 2.5rem;
+    margin-top: 2.5rem;
+    box-shadow: 0 4px 12px rgba(108, 99, 255, 0.3);
+    position: relative;
+    z-index: 2;
+  }
+
+  .components {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    justify-content: center;
+    position: relative;
+    z-index: 2;
+  }
+
+  .component {
+    background-color: rgba(255, 255, 255, 0.9);  /* More opaque background */
+    padding: 1rem 1.5rem;
+    border-radius: 8px;
+    border: 1px solid rgba(108, 99, 255, 0.3);  /* More visible border */
+    box-shadow: 0 2px 8px rgba(31, 38, 135, 0.1);
+    font-size: var(--text-base);
+    color: var(--text-primary);
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    position: relative;
+    z-index: 2;  /* Ensure components are above lines */
+  }
+
+  .component:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(31, 38, 135, 0.1);
+  }
+
+  /* Update the component line styles */
+  .component-line {
+    stroke: var(--accent-color);
+    stroke-width: 3;  /* Make lines thicker */
+    stroke-dasharray: 8, 8;  /* Make dashes more visible */
+    fill: none;  /* Ensure no fill */
+    opacity: 0.8;  /* Slightly transparent */
+    animation: dash 30s linear infinite;  /* Slower animation */
+  }
+
+  @keyframes dash {
+    to {
+      stroke-dashoffset: -1000;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .components-container {
+      min-height: 300px;
+    }
+    
+    .components {
+      flex-direction: column;
+      align-items: center;
     }
   }
   
