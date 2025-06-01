@@ -14,20 +14,22 @@
     window.MathJax = {
       tex: {
         inlineMath: [['$', '$'], ['\\(', '\\)']],
-        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        displayMath: [
+          ['$$', '$$'],     // standard $$…$$
+          ['\\[', '\\]']    // standard \[…\]
+          // Note: plain “[`”/“]” is NOT here, so "[ … ]" ​won’t​ render by itself.
+        ],
         processEscapes: true,
         processEnvironments: true
       },
-      options: {
-        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
-      }
+      svg: { fontCache: 'global' }
     };
   </script>
   <!-- 3) Load MathJax -->
   <script
     id="MathJax-script"
     async
-    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js">
   </script>
 
   <!-- 4) (Optional) GSAP, ScrollTrigger, etc., if you still need them for other parts of your page. -->
