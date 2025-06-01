@@ -589,13 +589,17 @@
     font-size: 1.1rem;
     line-height: 1.5;
   }
-  
-  .blender-info ul li:before {
+
+  .blender-info ul li::before {
     content: "•";
-    color: #6c63ff;
+    color: var(--accent-color);
     position: absolute;
     left: 0;
     font-size: 1.2rem;
+  }
+  
+  .blender-info ul li::marker {
+    color: var(--accent-color);
   }
   
   /*─────────────────────────────────────────────────────────────────────
