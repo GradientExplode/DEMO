@@ -140,50 +140,57 @@ let messageHistory = [
 ];
 
 /**
- * Normalise ad-hoc math fragments to KaTeX/MathJax form.
- *  - \[ … \]           → $$ … $$
- *  - \( … \)           → $  … $
- *  - literal “[ … ]”   → $$ … $$
- *  - line-only “( … )” → $$ … $$
- *  - inline  “( … )”   → $  … $   (heuristic: contains \, ^ or _)
+ * Canonicalise TeX delimiters in Markdown, but leave fenced code blocks untouched.
+ *
+ * @param {string} content  Full Markdown document
+ * @returns {string}        Document with TeX delimiters normalised
  */
 export function normaliseMath(content) {
+    // Split on fenced blocks: the regex keeps the fence + payload as its own piece
+    const parts = content.split(/(```[\s\S]*?```)/g);
 
-    /* 1 — canonical display math  \[ … \] → $$ … $$ */
-    content = content.replace(
-        // \[  …  \]  (greedy-but-minimal body)
-        /\\\[\s*([\s\S]+?)\s*\\\]/g,
-        (_match, texBody) => `$$${texBody.trim()}$$`
-    );
+    // Walk the pieces; only run replacements on the “non-code” chunks
+    for (let i = 0; i < parts.length; i++) {
+        if (parts[i].startsWith("```")) continue;           // skip fenced blocks
 
-    /* 2 — canonical inline math  \( … \) → $ … $ */
-    content = content.replace(
-        // \(  …  \)
-        /\\\(\s*([\s\S]+?)\s*\\\)/g,
-        (_match, texBody) => `$${texBody.trim()}$`
-    );
+        let txt = parts[i];
 
-    /* 3 — legacy / heuristic conversions (your original three rules) */
+        /* 1 — canonical display math  \[ … \] → $$ … $$ */
+        txt = txt.replace(
+            /\\\[\s*([\s\S]+?)\s*\\\]/g,
+            (_m, body) => `$$${body.trim()}$$`
+        );
 
-    // 3a. literal “[ … ]” anywhere  → $$ … $$
-    content = content.replace(
-        /\[\s*([^\]]+?)\s*\]/g,
-        (_match, texBody) => `$$${texBody.trim()}$$`
-    );
+        /* 2 — canonical inline math  \( … \) → $ … $ */
+        txt = txt.replace(
+            /\\\(\s*([\s\S]+?)\s*\\\)/g,
+            (_m, body) => `$${body.trim()}$`
+        );
 
-    // 3b. any whole line that is exactly “( … )”  → $$ … $$   (multiline)
-    content = content.replace(
-        /^[ \t]*\(\s*([\s\S]+?)\s*\)[ \t]*$/gm,
-        (_match, texBody) => `$$${texBody.trim()}$$`
-    );
+        /* 3 — legacy / heuristic conversions */
 
-    // 3c. inline “( … )” that *looks* like TeX (contains \, ^, or _ ) → $ … $
-    content = content.replace(
-        /\(\s*((?=[^)]*[\\_^])[\s\S]+?)\s*\)/g,
-        (_match, texBody) => `$${texBody.trim()}$`
-    );
+        // 3a. “[ … ]”
+        txt = txt.replace(
+            /\[\s*([^\]]+?)\s*\]/g,
+            (_m, body) => `$$${body.trim()}$$`
+        );
 
-    return content;
+        // 3b. whole line “( … )”
+        txt = txt.replace(
+            /^[ \t]*\(\s*([\s\S]+?)\s*\)[ \t]*$/gm,
+            (_m, body) => `$$${body.trim()}$$`
+        );
+
+        // 3c. inline “( … )” that looks like TeX
+        txt = txt.replace(
+            /\(\s*((?=[^)]*[\\_^])[\s\S]+?)\s*\)/g,
+            (_m, body) => `$${body.trim()}$`
+        );
+
+        parts[i] = txt; // put the processed text back
+    }
+
+    return parts.join("");
 }
 
 
