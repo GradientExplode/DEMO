@@ -145,11 +145,25 @@ let messageHistory = [
  *   2) Returns raw HTML string (do NOT escape `$...$`, since MathJax will handle it).
  */
 function formatMessage(content) {
-  // We use marked() to convert Markdown → HTML.
-  // marked() will leave `$…$` and `$$…$$` intact (because MathJax will parse it).
-  const html = marked.parse(content);
-  return html;
-}
+    // 1) Convert Markdown → HTML
+    const rawHtml = marked.parse(content);
+  
+    // 2) If there are <li><p>…</p></li> patterns, unwrap the <p>:
+    const wrapper = document.createElement('div');
+    wrapper.innerHTML = rawHtml;
+  
+    // Find all <p> nodes whose parent is an <li>, then replace them
+    // by their innerHTML
+    wrapper.querySelectorAll('li > p').forEach(p => {
+      const li = p.parentNode;
+      // Take everything inside <p>…</p> and move it up into <li>
+      // (i.e. remove the <p> wrapper but keep its contents)
+      li.innerHTML = p.innerHTML;
+    });
+  
+    // 3) Return the cleaned HTML
+    return wrapper.innerHTML;
+  }
 
 /**
  * addMessage(content, isUser):
