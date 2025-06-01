@@ -140,30 +140,60 @@ let messageHistory = [
 ];
 
 /**
+ * Normalise ad-hoc math fragments to KaTeX/MathJax form.
+ *  - \[ … \]           → $$ … $$
+ *  - \( … \)           → $  … $
+ *  - literal “[ … ]”   → $$ … $$
+ *  - line-only “( … )” → $$ … $$
+ *  - inline  “( … )”   → $  … $   (heuristic: contains \, ^ or _)
+ */
+export function normaliseMath(content) {
+
+    /* 1 — canonical display math  \[ … \] → $$ … $$ */
+    content = content.replace(
+        // \[  …  \]  (greedy-but-minimal body)
+        /\\\[\s*([\s\S]+?)\s*\\\]/g,
+        (_match, texBody) => `$$${texBody.trim()}$$`
+    );
+
+    /* 2 — canonical inline math  \( … \) → $ … $ */
+    content = content.replace(
+        // \(  …  \)
+        /\\\(\s*([\s\S]+?)\s*\\\)/g,
+        (_match, texBody) => `$${texBody.trim()}$`
+    );
+
+    /* 3 — legacy / heuristic conversions (your original three rules) */
+
+    // 3a. literal “[ … ]” anywhere  → $$ … $$
+    content = content.replace(
+        /\[\s*([^\]]+?)\s*\]/g,
+        (_match, texBody) => `$$${texBody.trim()}$$`
+    );
+
+    // 3b. any whole line that is exactly “( … )”  → $$ … $$   (multiline)
+    content = content.replace(
+        /^[ \t]*\(\s*([\s\S]+?)\s*\)[ \t]*$/gm,
+        (_match, texBody) => `$$${texBody.trim()}$$`
+    );
+
+    // 3c. inline “( … )” that *looks* like TeX (contains \, ^, or _ ) → $ … $
+    content = content.replace(
+        /\(\s*((?=[^)]*[\\_^])[\s\S]+?)\s*\)/g,
+        (_match, texBody) => `$${texBody.trim()}$`
+    );
+
+    return content;
+}
+
+
+/**
  * formatMessage(content):
  *   1) Runs `marked()` to turn Markdown (including code fences, bullet lists, and inline LaTeX delimiters) → HTML.
  *   2) Returns raw HTML string (do NOT escape `$...$`, since MathJax will handle it).
  */
 function formatMessage(content) {
-    content = content.replace(
-        // matches a literal “[ … ]” (anywhere) and captures what's inside
-        /\[\s*([^\]]+?)\s*\]/g,
-        (_match, texBody) => `$$${texBody.trim()}$$`
-    );
-
-    content = content.replace(
-        // Any line that is exactly “( … )” → “$$ … $$” (multiline flag so “^…$” matches per‐line)
-        /^[ \t]*\(\s*([\s\S]+?)\s*\)[ \t]*$/gm,
-        (_match, texBody) => `$$${texBody.trim()}$$`
-    );
-
-    content = content.replace(
-        // This regex finds “(…)" where inside there is at least one "\" or "_" 
-        // (a heuristic for “this is probably TeX”)
-        /\(\s*((?=[\s\S]*?[\\_^])[\s\S]+?)\s*\)/g,
-        (_match, texBody) => `$${texBody.trim()}$`
-    );
-    
+    content = normaliseMath(content);
 
     // 1) Convert Markdown → HTML
     const rawHtml = marked.parse(content);
@@ -328,7 +358,7 @@ async function sendToOpenRouter(message) {
       },
       messages: [...currentMessages, { role: 'user', content: message }],
       temperature: 0.7,
-      max_tokens: 1000,
+      max_tokens: 4096,
       stream: true
     };
 

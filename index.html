@@ -5,37 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Brain Imaging Toolbox</title>
   <link rel="stylesheet" href="styles.css">
-
-  <!-- 1) Load Marked.js from CDN -->
-  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-
-  <!-- 2) Configure MathJax BEFORE loading the MathJax script -->
-  <script>
-    window.MathJax = {
-      tex: {
-        inlineMath: [['$', '$'], ['\\(', '\\)']],
-        displayMath: [
-          ['$$', '$$'],     // standard $$…$$
-          ['\\[', '\\]']    // standard \[…\]
-          // Note: plain “[`”/“]” is NOT here, so "[ … ]" ​won’t​ render by itself.
-        ],
-        processEscapes: true,
-        processEnvironments: true
-      },
-      svg: { fontCache: 'global' }
-    };
-  </script>
-  <!-- 3) Load MathJax -->
-  <script
-    id="MathJax-script"
-    async
-    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js">
-  </script>
-
-  <!-- 4) (Optional) GSAP, ScrollTrigger, etc., if you still need them for other parts of your page. -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
-
 </head>
 <body>
   <!-- ====================== NAVBAR ====================== -->
@@ -190,7 +159,36 @@
     <p>dMRI Toolbox • Interactive Neural Mesh Visualization</p>
   </footer>
 
-  <!-- 5) Your own script that handles chat + Markdown/LaTeX rendering -->
-  <script type="module" src="script.js"></script>
+    <!-- 1) Load Marked.js from CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+    <!-- 2) Configure MathJax BEFORE loading the MathJax script -->
+    <script>
+      window.MathJax = {
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']],
+          displayMath: [
+            ['$$', '$$'],     // standard $$…$$
+            ['\\[', '\\]']    // standard \[…\]
+            // Note: plain “[`”/“]” is NOT here, so "[ … ]" ​won’t​ render by itself.
+          ],
+          processEscapes: true,
+          processEnvironments: true
+        },
+        svg: { fontCache: 'global' }
+      };
+    </script>
+    <!-- 3) Load MathJax -->
+    <script
+      id="MathJax-script"
+      async
+      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js">
+    </script>
+  
+    <!-- 4) (Optional) GSAP, ScrollTrigger, etc., if you still need them for other parts of your page. -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
+    <!-- 5) Your own script that handles chat + Markdown/LaTeX rendering -->
+    <script type="module" src="script.js"></script>
 </body>
 </html>
