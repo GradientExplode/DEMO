@@ -17,6 +17,8 @@
     background: linear-gradient(120deg, #e0e7ff 0%, #f5f7fa 100%);
     color: #222;
     min-height: 100vh;
+    font-size: var(--text-base);
+    line-height: var(--leading-relaxed);
   }
   
   /*─────────────────────────────────────────────────────────────────────
@@ -55,23 +57,57 @@
   /*─────────────────────────────────────────────────────────────────────
     ── TYPOGRAPHY ───────────────────────────────────────────────────────
   ─────────────────────────────────────────────────────────────────────*/
+  :root {
+    /* Font sizes */
+    --text-xs: 0.875rem;    /* 14px */
+    --text-sm: 1rem;        /* 16px */
+    --text-base: 1.1rem;    /* 17.6px */
+    --text-lg: 1.25rem;     /* 20px */
+    --text-xl: 1.5rem;      /* 24px */
+    --text-2xl: 1.8rem;     /* 28.8px */
+    --text-3xl: 2rem;       /* 32px */
+    --text-4xl: 2.5rem;     /* 40px */
+    
+    /* Colors */
+    --text-primary: #2c3e50;
+    --text-secondary: #444;
+    --text-light: #666;
+    --text-white: #ffffff;
+    --accent-color: #6c63ff;
+    --accent-dark: #2d2d8f;
+    
+    /* Line heights */
+    --leading-tight: 1.2;
+    --leading-normal: 1.5;
+    --leading-relaxed: 1.6;
+  }
+  
   h1 {
-    font-size: 2rem;
-    color: #2c3e50;
+    font-size: var(--text-3xl);
+    color: var(--text-primary);
     margin-bottom: 1rem;
+    line-height: var(--leading-tight);
   }
   
   h2 {
-    color: #6c63ff;
-    font-size: 2rem;
-    margin-bottom: 0.5rem;
+    font-size: var(--text-2xl);
+    color: var(--accent-color);
+    margin-bottom: 0.75rem;
+    line-height: var(--leading-tight);
+  }
+  
+  h3 {
+    font-size: var(--text-xl);
+    color: var(--accent-color);
+    margin-bottom: 0.75rem;
+    line-height: var(--leading-tight);
   }
   
   p {
-    font-size: 1rem;
-    color: #333;
+    font-size: var(--text-base);
+    color: var(--text-secondary);
     margin-bottom: 1rem;
-    line-height: 1.6;
+    line-height: var(--leading-relaxed);
   }
   
   ul,
@@ -187,15 +223,15 @@
   }
   
   .hero-title h1 {
-    color: white;
-    font-size: 4rem;
+    font-size: var(--text-4xl);
+    color: var(--text-white);
     font-weight: 700;
     margin-bottom: 1rem;
   }
   
   .hero-title p {
-    color: white;
-    font-size: 1.5rem;
+    font-size: var(--text-xl);
+    color: var(--text-white);
     opacity: 0.9;
   }
   
@@ -251,8 +287,8 @@
   
   .mesh-content h2 {
     margin: 0 0 1.5rem;
-    font-size: 2.5rem;
-    color: #6c63ff;
+    font-size: var(--text-2xl);
+    color: var(--accent-color);
     line-height: 1.2;
     text-align: center;
   }
@@ -297,9 +333,9 @@
   }
   
   .mesh-type h3 {
-    color: #6c63ff;
+    font-size: var(--text-xl);
+    color: var(--accent-color);
     margin-bottom: 1rem;
-    font-size: 1.4rem;
   }
   
   .mesh-type ul {
@@ -311,7 +347,7 @@
     margin-bottom: 1rem;
     padding-left: 1.2rem;
     position: relative;
-    color: #444;
+    color: var(--text-secondary);
     line-height: 1.5;
   }
   
@@ -451,8 +487,8 @@
   
   .dmri-content h2 {
     margin: 0 0 2rem;
-    font-size: 2.5rem;
-    color: #6c63ff;
+    font-size: var(--text-2xl);
+    color: var(--accent-color);
     text-align: center;
     line-height: 1.2;
   }
@@ -483,14 +519,14 @@
   }
   
   .dmri-info h3 {
-    color: #6c63ff;
-    font-size: 1.6rem;
+    font-size: var(--text-xl);
+    color: var(--accent-color);
     margin-bottom: 1rem;
   }
   
   .dmri-info p {
-    color: #333;
-    font-size: 1.1rem;
+    font-size: var(--text-base);
+    color: var(--text-secondary);
     line-height: 1.6;
     margin-bottom: 1.5rem;
   }
@@ -529,39 +565,46 @@
   }
   
   .blender-info h3 {
-    color: #6c63ff;
-    font-size: 1.6rem;
+    font-size: var(--text-xl);
+    color: var(--accent-color);
     margin-bottom: 1rem;
   }
   
   .blender-info p {
-    color: #333;
+    font-size: var(--text-base);
+    color: var(--text-secondary);
     margin-bottom: 1.2rem;
-    font-size: 1.1rem;
     line-height: 1.6;
   }
   
-  .blender-info ul {
-    list-style-type: none;
-    padding: 0;
-    margin-bottom: 1.5rem;
-  }
-  
-  .blender-info ul li {
-    color: #444;
-    margin-bottom: 0.8rem;
+  .blender-info ul,
+  .ai-model-info ul {
+    margin: 1rem 0;
     padding-left: 1.5rem;
-    position: relative;
-    font-size: 1.1rem;
-    line-height: 1.5;
+    list-style-type: none;
   }
   
-  .blender-info ul li:before {
+  .blender-info ul li,
+  .ai-model-info ul li {
+    margin-bottom: 0.5rem;
+    line-height: var(--leading-normal);
+    color: var(--text-secondary);
+    position: relative;
+    padding-left: 1.5rem;
+  }
+  
+  .blender-info ul li::before,
+  .ai-model-info ul li::before {
     content: "•";
-    color: #6c63ff;
+    color: var(--accent-color);
     position: absolute;
     left: 0;
     font-size: 1.2rem;
+  }
+  
+  .blender-info ul li::marker,
+  .ai-model-info ul li::marker {
+    color: var(--accent-color);
   }
   
   /*─────────────────────────────────────────────────────────────────────
@@ -636,7 +679,7 @@
     backdrop-filter: blur(10px);
     border-radius: 24px;
     box-shadow: 0 8px 32px rgba(31, 38, 135, 0.1);
-    height: calc(120vh - 180px);
+    height: calc(160vh - 180px);
     display: flex;
     flex-direction: column;
     border: 1px solid rgba(255, 255, 255, 0.18);
@@ -649,8 +692,8 @@
   }
   
   .chat-header h1 {
-    font-size: 2.5rem;
-    color: #6c63ff;
+    font-size: var(--text-2xl);
+    color: var(--accent-color);
     text-align: center;
     margin: 0;
   }
@@ -695,8 +738,8 @@
   /* THIS is what now contains Markdown → HTML (via `marked.parse`) + MathJax */
   .message-content {
     /* remove the pre-wrap from here if you only care about <p> text */
-    font-size: 1.1rem;
-    line-height: 1.6;
+    font-size: var(--text-base);
+    line-height: var(--leading-relaxed);
     word-break: break-word;
     display: inline-block;
   }
@@ -769,12 +812,12 @@
     margin: 1rem 0 0.5rem;
     line-height: 1.3;
   }
-  .message-content h1 { font-size: 1.8rem; }
-  .message-content h2 { font-size: 1.6rem; }
-  .message-content h3 { font-size: 1.4rem; }
-  .message-content h4 { font-size: 1.2rem; }
-  .message-content h5 { font-size: 1.1rem; }
-  .message-content h6 { font-size: 1rem; }
+  .message-content h1 { font-size: var(--text-2xl); }
+  .message-content h2 { font-size: var(--text-xl); }
+  .message-content h3 { font-size: var(--text-lg); }
+  .message-content h4 { font-size: var(--text-base); }
+  .message-content h5 { font-size: var(--text-sm); }
+  .message-content h6 { font-size: var(--text-xs); }
   
   .message-content p {
     margin: 0.75rem 0;
@@ -906,8 +949,8 @@
     border: 1px solid rgba(108, 99, 255, 0.2);
     border-radius: 12px;
     background: white;
-    color: #2c3e50;
-    font-size: 1.1rem;
+    color: var(--text-primary);
+    font-size: var(--text-base);
     transition: all 0.3s ease;
   }
   
@@ -926,7 +969,7 @@
     cursor: pointer;
     transition: all 0.3s ease;
     font-weight: 500;
-    font-size: 1.1rem;
+    font-size: var(--text-base);
     display: flex;
     align-items: center;
     gap: 0.5rem;
@@ -971,11 +1014,11 @@
     }
   
     .hero-title h1 {
-      font-size: 2.5rem;
+      font-size: var(--text-2xl);
     }
   
     .hero-title p {
-      font-size: 1.2rem;
+      font-size: var(--text-lg);
     }
   
     /* Mesh container adjustments */
@@ -1034,7 +1077,7 @@
     }
   
     .dmri-content h2 {
-      font-size: 2rem;
+      font-size: var(--text-xl);
       margin-bottom: 1.5rem;
     }
   
@@ -1047,11 +1090,11 @@
     }
   
     .dmri-info h3 {
-      font-size: 1.4rem;
+      font-size: var(--text-xl);
     }
   
     .dmri-info p {
-      font-size: 1rem;
+      font-size: var(--text-base);
     }
   
     .blender-info {
@@ -1059,12 +1102,12 @@
     }
   
     .blender-info h3 {
-      font-size: 1.4rem;
+      font-size: var(--text-xl);
     }
   
     .blender-info p,
     .blender-info ul li {
-      font-size: 1rem;
+      font-size: var(--text-base);
     }
   
     /* Chat container adjustments */
@@ -1075,7 +1118,7 @@
     }
   
     .chat-header h1 {
-      font-size: 2rem;
+      font-size: var(--text-xl);
     }
   
     .message {
@@ -1151,7 +1194,7 @@
     }
   
     .dmri-content h2 {
-      font-size: 1.8rem;
+      font-size: var(--text-xl);
     }
   
     .video-container iframe {
@@ -1168,7 +1211,7 @@
     }
   
     .chat-header h1 {
-      font-size: 1.8rem;
+      font-size: var(--text-lg);
     }
   
     .chat-messages {
@@ -1177,7 +1220,7 @@
   
     .message {
       padding: 1rem;
-      font-size: 1rem;
+      font-size: var(--text-sm);
     }
   
     .code-block {
@@ -1207,6 +1250,82 @@
     to {
       opacity: 1;
       transform: translateY(0);
+    }
+  }
+  
+  .ai-model-info {
+    margin: 1.5rem 0;
+    padding: 2rem;
+    background: rgba(255, 255, 255, 0.5);
+    border-radius: 16px;
+    box-shadow: 0 4px 24px rgba(31, 38, 135, 0.05);
+  }
+  
+  .ai-model-logo {
+    width: 280px;
+    height: auto;
+    margin-bottom: 0.5rem;
+    transition: transform 0.3s ease;
+  }
+  
+  .ai-model-logo:hover {
+    transform: scale(1.05);
+  }
+  
+  .ai-model-info h3 {
+    color: var(--accent-color);
+    font-size: var(--text-xl);
+    margin-bottom: 1rem;
+  }
+  
+  .ai-model-info p {
+    margin-bottom: 1rem;
+    line-height: var(--leading-relaxed);
+    color: var(--text-secondary);
+  }
+  
+  .ai-model-info ul {
+    margin: 1rem 0;
+    padding-left: 1.5rem;
+  }
+  
+  .ai-model-info ul li {
+    margin-bottom: 0.5rem;
+    line-height: var(--leading-normal);
+    color: var(--text-secondary);
+    position: relative;
+    padding-left: 1.5rem;
+  }
+  
+  .ai-model-info ul li::before {
+    content: "•";
+    color: var(--accent-color);
+    position: absolute;
+    left: 0;
+    font-size: 1.2rem;
+  }
+  
+  .ai-model-info ul li::marker {
+    color: var(--accent-color);
+  }
+  
+  @media (max-width: 768px) {
+    .ai-model-logo {
+      width: 220px;
+    }
+    
+    .ai-model-info {
+      padding: 1.5rem;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .ai-model-logo {
+      width: 180px;
+    }
+    
+    .ai-model-info {
+      padding: 1.2rem;
     }
   }
   

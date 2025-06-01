@@ -118,13 +118,15 @@
                   alt="Blender Logo"
                   style="height: 60px; margin-bottom: 1rem;" />
                 <h3>Mesh Construction with Blender</h3>
-                <p>We use Blender's powerful 3D modeling capabilities to create neural meshes through a custom parameterized workflow. This approach allows us to:</p>
-                <ul>
-                  <li>Generate neural structures with adjustable parameters</li>
-                  <li>Create realistic axon and soma networks</li>
-                  <li>Export optimized meshes for dMRI simulation</li>
-                </ul>
-                <p>Our workflow streamlines the creation of neural structures, from simple axon bundles to complex branching patterns, ensuring precise geometric properties for accurate dMRI simulation.</p>
+                <div class="message-content">
+                    <p>We use Blender's powerful 3D modeling capabilities to create neural meshes through a custom parameterized workflow. This approach allows us to:</p>
+                    <ul>
+                      <li>Generate neural structures with adjustable parameters</li>
+                      <li>Create realistic axon and soma networks</li>
+                      <li>Export optimized meshes for dMRI simulation</li>
+                    </ul>
+                    <p>Our workflow streamlines the creation of neural structures, from simple axon bundles to complex branching patterns, ensuring precise geometric properties for accurate dMRI simulation.</p>
+                </div>
               </div>
             </div>
           </div>
@@ -151,6 +153,20 @@
             </svg>
           </button>
         </div>
+        <div class="ai-model-info glass">
+          <img src="images/Logo_Qwen-2.5-Coder.png" alt="Qwen 2.5 Coder Logo" class="ai-model-logo">
+          <h3>Powered by Advanced AI</h3>
+          <div class="message-content">
+            <p>Our AI coding assistant is built on <code>Qwen2.5-Coder-32B-Instruct</code> that has been LoRA fine-tuned using <strong>Group Relative Policy Optimization (GRPO)</strong>. This advanced training methodology enables the model to:</p>
+            <ul>
+                <li>Learn from group-based feedback to improve response quality</li>
+                <li>Maintain consistent coding style and best practices</li>
+                <li>Provide more accurate and contextually relevant solutions</li>
+                <li>Adapt to different programming paradigms and requirements</li>
+            </ul>
+            <p>The GRPO approach helps ensure that the assistant's responses are not only technically correct but also aligned with industry standards and best practices.</p>
+          </div>
+        </div>
       </div>
    </section>
 
@@ -170,7 +186,7 @@
           displayMath: [
             ['$$', '$$'],     // standard $$…$$
             ['\\[', '\\]']    // standard \[…\]
-            // Note: plain “[`”/“]” is NOT here, so "[ … ]" ​won’t​ render by itself.
+            // Note: plain "["/"]" is NOT here, so "[ ... ]" won't render by itself.
           ],
           processEscapes: true,
           processEnvironments: true
