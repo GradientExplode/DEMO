@@ -430,72 +430,80 @@ function debounce(func, wait) {
 
 // Function to draw connecting lines between toolbox components
 function drawToolboxLines() {
-  const svg       = document.querySelector('.component-lines');
-  const centerEl  = document.querySelector('.toolbox-center');
-  const comps     = document.querySelectorAll('.component');
-  const container = document.querySelector('.components-container');
-  if (!svg || !centerEl || comps.length === 0 || !container) return;
-
-  // 1) clear out any existing paths
-  svg.innerHTML = '';
-
-  // Get container's top‐left (so we can work in its coordinate space)
-  const cRect   = container.getBoundingClientRect();
-  const ctrRect = centerEl.getBoundingClientRect();
-  // Center point of the “Brain Imaging Toolbox” box, relative to CONTAINER:
-  const ctrX    = ctrRect.left + ctrRect.width  / 2 - cRect.left;
-  const ctrY    = ctrRect.top  + ctrRect.height / 2 - cRect.top;
-
-  // For each component, compute its center (relative to the same container),
-  // then draw a quadratic Bézier from (ctrX, ctrY) → (pX, pY).
-  comps.forEach(comp => {
-    const r  = comp.getBoundingClientRect();
-    // Center of this component box, also relative to container:
-    const pX = r.left + r.width  / 2 - cRect.left;
-    const pY = r.top  + r.height / 2 - cRect.top;
-
-    // Vector from center to component:
-    const dx  = pX - ctrX;
-    const dy  = pY - ctrY;
-    // Distance (never zero because boxes are distinct):
-    const dist = Math.hypot(dx, dy) || 1;
-    // Unit direction vector
-    const ux  = dx / dist;
-    const uy  = dy / dist;
-
-    // Pick a “curve magnitude” proportional to the distance
-    // (you can tweak 0.15 → 0.2 etc. to make the arc more or less pronounced)
-    const curve = dist * 0.15;
-
-    // A perpendicular vector to (ux, uy):
-    let perpX = -uy;
-    let perpY = ux;
-
-    // ──────────────────────────────────────────────────────────────────────
-    // *** NEW: if the component is on the RIGHT side of center, flip perp ***
-    // This makes the right‐most box curve to the right.
-    if (dx > 0) {
-      perpX = -perpX;
-      perpY = -perpY;
-    }
-    // ──────────────────────────────────────────────────────────────────────
-
-    // Midpoint between (ctrX, ctrY) and (pX, pY):
-    const midX = (ctrX + pX) / 2;
-    const midY = (ctrY + pY) / 2;
-
-    // Shift the midpoint by “curve” amount perpendicular to the line:
-    const cX = midX + perpX * curve;
-    const cY = midY + perpY * curve;
-
-    // Build the SVG <path>:
-    const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-    path.setAttribute('d', `M ${ctrX} ${ctrY} Q ${cX} ${cY} ${pX} ${pY}`);
-    path.setAttribute('class', 'component-line');
-    svg.appendChild(path);
-  });
-}
-
+    const svg       = document.querySelector('.component-lines');
+    const centerEl  = document.querySelector('.toolbox-center');
+    const comps     = document.querySelectorAll('.component');
+    const container = document.querySelector('.components-container');
+    if (!svg || !centerEl || comps.length === 0 || !container) return;
+  
+    // Clear out any existing paths
+    svg.innerHTML = '';
+  
+    // Grab the container’s top-left, so all coordinates can be relative to it
+    const cRect   = container.getBoundingClientRect();
+    const ctrRect = centerEl.getBoundingClientRect();
+    const ctrX    = ctrRect.left + ctrRect.width  / 2 - cRect.left;
+    const ctrY    = ctrRect.top  + ctrRect.height / 2 - cRect.top;
+  
+    comps.forEach(comp => {
+      const r  = comp.getBoundingClientRect();
+      const pX = r.left + r.width  / 2 - cRect.left;
+      const pY = r.top  + r.height / 2 - cRect.top;
+  
+      // Vector from toolbox center → component center:
+      const dx   = pX - ctrX;
+      const dy   = pY - ctrY;
+      const dist = Math.hypot(dx, dy) || 1;   // never zero
+      const ux   = dx / dist;  // unit‐x
+      const uy   = dy / dist;  // unit‐y
+  
+      // If the component is below the toolbox, we want to bow downward.
+      // curve = “how far out” the quadratic control point should sit.
+      const curve = dist * 0.15; // tweak 0.15→0.2 for a more pronounced bow
+  
+      // ─── Decide (perpX, perpY) so that:
+      //   1) perpY > 0  (always push downward if dy>0)
+      //   2) perpX has the same sign as dx  (always push outward)
+      //   3) If the connection is “nearly vertical” (|dx/dist|<0.2), force a purely downward bow
+      // ───────────────────────────────────────────────────────────────────────────────
+      let perpX, perpY;
+  
+      // 2a) Check for “nearly vertical” (i.e. |dx/dist| is small)
+      const verticalThreshold = 0.05; 
+      if (Math.abs(dx / dist) < verticalThreshold) {
+        // Force a straight‐downward shift so the curve cannot collapse
+        perpX = 0;
+        perpY = 1;
+      }
+      else {
+        // 2b) Compute the raw perpendicular = (–uy, ux)
+        const rawX = -uy;
+        const rawY = ux;
+  
+        // 2c) Force “downward” and “outward”:
+        //     perpY = |rawY|  → always positive (bows downward)
+        //     perpX = sign(dx)*|rawX|  → outwards (left if dx<0, right if dx>0)
+        perpX = Math.sign(dx) * Math.abs(rawX);
+        perpY = Math.abs(rawY);
+      }
+      // ───────────────────────────────────────────────────────────────────────────────
+  
+      // Midpoint between (ctrX, ctrY) and (pX, pY):
+      const midX = (ctrX + pX) / 2;
+      const midY = (ctrY + pY) / 2;
+  
+      // Push that midpoint “curve” units along (perpX, perpY):
+      const cX = midX + perpX * curve;
+      const cY = midY + perpY * curve;
+  
+      // Create the SVG path (quadratic Bézier):
+      const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+      path.setAttribute('d', `M ${ctrX} ${ctrY} Q ${cX} ${cY} ${pX} ${pY}`);
+      path.setAttribute('class', 'component-line');
+      svg.appendChild(path);
+    });
+  }
+  
   
 
 // Event Listeners
@@ -549,21 +557,35 @@ window.addEventListener('DOMContentLoaded', () => {
 
   if (meshComponent) {
     meshComponent.addEventListener('click', () => {
-      window.location.hash = '#mesh-section';
+      const target = document.getElementById('mesh-section');
+      if (target) {
+        target.scrollIntoView({ behavior: 'smooth' });
+        // Also update the hash so the URL reflects where we are:
+        history.replaceState(null, '', '#mesh-section');
+      }
     });
   }
 
   if (dmriComponent) {
     dmriComponent.addEventListener('click', () => {
-      window.location.hash = '#dmri-section';
+      const target = document.getElementById('dmri-section');
+      if (target) {
+        target.scrollIntoView({ behavior: 'smooth' });
+        history.replaceState(null, '', '#dmri-section');
+      }
     });
   }
-
+  
   if (aiComponent) {
     aiComponent.addEventListener('click', () => {
-      window.location.hash = '#ai-section';
+      const target = document.getElementById('ai-section');
+      if (target) {
+        target.scrollIntoView({ behavior: 'smooth' });
+        history.replaceState(null, '', '#ai-section');
+      }
     });
   }
+  
 
   // Chat Assistant Initialization
   if (chatInput && sendButton) {
