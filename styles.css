@@ -240,8 +240,7 @@
   ─────────────────────────────────────────────────────────────────────*/
   .mesh-section {
     width: 100%;
-    background: linear-gradient(120deg, #e0e7ff 0%, #f5f7fa 100%);
-    padding-top: 3rem;
+    padding-top: 2rem;
   }
   
   .mesh-inner {
@@ -456,8 +455,7 @@
   ─────────────────────────────────────────────────────────────────────*/
   .dmri-section {
     width: 100%;
-    padding: 3rem 0;
-    background: linear-gradient(120deg, #e0e7ff 0%, #f5f7fa 100%);
+    padding-top: 2rem;
   }
   
   .dmri-inner {
@@ -577,34 +575,27 @@
     line-height: 1.6;
   }
   
-  .blender-info ul,
-  .ai-model-info ul {
-    margin: 1rem 0;
-    padding-left: 1.5rem;
+  .blender-info ul {
     list-style-type: none;
+    padding: 0;
+    margin-bottom: 1.5rem;
   }
   
-  .blender-info ul li,
-  .ai-model-info ul li {
-    margin-bottom: 0.5rem;
-    line-height: var(--leading-normal);
-    color: var(--text-secondary);
-    position: relative;
+  .blender-info ul li {
+    color: #444;
+    margin-bottom: 0.8rem;
     padding-left: 1.5rem;
+    position: relative;
+    font-size: 1.1rem;
+    line-height: 1.5;
   }
   
-  .blender-info ul li::before,
-  .ai-model-info ul li::before {
+  .blender-info ul li:before {
     content: "•";
-    color: var(--accent-color);
+    color: #6c63ff;
     position: absolute;
     left: 0;
     font-size: 1.2rem;
-  }
-  
-  .blender-info ul li::marker,
-  .ai-model-info ul li::marker {
-    color: var(--accent-color);
   }
   
   /*─────────────────────────────────────────────────────────────────────
@@ -671,9 +662,18 @@
   /*─────────────────────────────────────────────────────────────────────
     ── CHAT ASSISTANT STYLES ────────────────────────────────────────────
   ─────────────────────────────────────────────────────────────────────*/
+  .ai-assistant-section {
+    padding-top: 2rem;
+    padding-bottom: 0;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+  }
+
   .chat-container {
     max-width: 1200px;
-    margin: 2rem auto;
+    width: 100%;
+    margin: 0 auto;
     padding: 2rem;
     background: rgba(255, 255, 255, 0.85);
     backdrop-filter: blur(10px);
@@ -1033,7 +1033,7 @@
   
     .mesh-inner {
       flex-direction: column;
-      width: 98vw;
+      width: 100vw;
       height: auto;
       min-height: 0;
       transform: translateY(40px);
@@ -1041,9 +1041,8 @@
   
     .mesh-content {
       margin: 1.5rem auto 0;
-      max-width: 98vw;
+      max-width: 100vw;
       min-width: 0;
-      text-align: center;
       padding: 1.2rem 1rem;
       transform: none;
     }
@@ -1072,6 +1071,11 @@
     }
   
     /* dMRI Section */
+    .dmri-section {
+        padding-top: 1rem;
+        padding-bottom: 0;
+    }
+
     .dmri-content {
       padding: 1.5rem;
     }
@@ -1096,6 +1100,11 @@
     .dmri-info p {
       font-size: var(--text-base);
     }
+
+    .mesh-section {
+        padding-top: 1rem;
+        padding-bottom: 0;
+    }
   
     .blender-info {
       padding: 1.5rem;
@@ -1111,10 +1120,13 @@
     }
   
     /* Chat container adjustments */
+    .ai-assistant-section {
+        padding-top: 1rem;
+        padding-bottom: 0;
+    }
+
     .chat-container {
-      margin: 1.5rem;
-      height: calc(100vh - 120px);
-      padding: 1.5rem;
+      height: calc(200vh - 100px);
     }
   
     .chat-header h1 {
@@ -1148,6 +1160,11 @@
     #viewer {
       min-height: 400px;
     }
+
+    .mesh-section {
+        padding-top: 1rem;
+        padding-bottom: 0;
+    }
   
     .mesh-explanation {
       gap: 1.5rem;
@@ -1173,58 +1190,168 @@
   
     /* dMRI adjustments */
     .dmri-section {
-      padding: 2rem 0;
+      padding-top: 1rem;
+      padding-bottom: 0;
+    }
+
+    /* Chat container adjustments */
+    .ai-assistant-section {
+        padding-top: 1rem;
+        padding-bottom: 0;
+    }
+
+    .chat-container {
+      height: calc(200vh - 100px);
+    }
+  
+    .chat-header h1 {
+      font-size: var(--text-xl);
+    }
+  
+    .message {
+      max-width: 90%;
+    }
+  
+    .chat-input-container {
+      padding: 1rem;
+    }
+  
+    #chat-input {
+      padding: 1rem;
+    }
+  
+    #send-button {
+      padding: 1rem 1.5rem;
     }
   }
   
   /* Height adjustments for very small screens */
   @media (max-width: 600px) {
-    .hero-section {
-      height: 45vh;
-      min-height: 220px;
+
+    /*--- 1.  safer viewport & typography -------------*/
+    :root{
+      /* shrink the overall scale but keep hierarchy */
+      --text-base : 0.95rem;   /* 15.2 px */
+      --text-lg   : 1.05rem;
+      --text-xl   : 1.25rem;
+      --text-2xl  : 1.55rem;
+      --text-3xl  : 1.85rem;
+      --text-4xl  : 2.15rem;
     }
   
-    .info-section {
-      margin: 1.5rem 0.5rem;
-      padding: 1rem 0.5rem;
+    body{
+      font-size: var(--text-base);
+      padding-inline: max(env(safe-area-inset-left),.5rem)
+                      max(env(safe-area-inset-right),.5rem);
     }
   
-    .dmri-content {
-      padding: 1rem;
+    /*--- 2.  navigation --------------------------------*/
+    .main-nav{
+      padding: .75rem 1rem;
+    }
+    /* turn the link stack into a slide-out burger –
+       keeps the code brief & avoids extra JS libraries  */
+    .nav-content{
+      position: relative;
+    }
+    .nav-links{
+      position: fixed;
+      inset: 0 0 0 40%;
+      flex-direction: column;
+      padding-block: 3.5rem;
+      background:#fff;
+      transform: translateX(100%);
+      transition: transform .3s ease;
+    }
+    #burger:checked ~ .nav-links{
+      transform: none;
+    }
+    /* tiny burger checkbox */
+    #burger{
+      display:block;
+      appearance:none;
+      width:2rem;height:2rem;
+      border:2px solid currentColor;
+      border-radius:3px;
+      position:absolute;right:0;top:.25rem;
+    }
+    #burger::before,
+    #burger::after{
+      content:'';display:block;width:60%;height:2px;
+      background:currentColor;position:absolute;left:20%;
+      transition:transform .3s ease;
+    }
+    #burger::before{top:.45rem}
+    #burger::after {bottom:.45rem}
+    #burger:checked::before{transform:translateY(4px) rotate(45deg)}
+    #burger:checked::after {transform:translateY(-4px) rotate(-45deg)}
+  
+    /*--- 3.  hero section -----------------------------*/
+    .hero-section{
+      height:60svh;           /* avoids iOS toolbar jumpiness */
+      min-height:240px;
     }
   
-    .dmri-content h2 {
-      font-size: var(--text-xl);
+    /*--- 4.  mri/mesh/axon blocks -------------------------*/
+    .dmri-section {
+        padding-top: 1rem;
+        padding-bottom: 0;
+    }
+    .mesh-section {
+        padding-top: 1rem;
+        padding-bottom: 0;
+    }
+    .mesh-inner {
+        width: 97vw;     /* fill the viewport */
+        padding: 0;       /* no leftover internal padding */
+    }
+
+    .axon-block{
+      max-width:320px;
+      width:100%;
+    }
+    .axon-block .mesh-viewer{
+      height:180px;           /* keeps ratio sane */
     }
   
-    .video-container iframe {
-      height: 250px;
+    /*--- 5.  chat area -------------------------------*/
+    .ai-assistant-section {
+        padding-top: 1rem;
+        padding-bottom: 0;
     }
-  
-    .dmri-info {
-      padding: 1.2rem;
-    }
-  
+    /* Chat container adjustments */
     .chat-container {
-      margin: 1rem;
-      padding: 1rem;
+      height: calc(200vh - 100px);
     }
   
     .chat-header h1 {
-      font-size: var(--text-lg);
-    }
-  
-    .chat-messages {
-      padding: 1rem;
+      font-size: var(--text-xl);
     }
   
     .message {
-      padding: 1rem;
-      font-size: var(--text-sm);
+      max-width: 90%;
     }
   
-    .code-block {
+    .chat-input-container {
       padding: 1rem;
+    }
+  
+    #chat-input {
+      padding: 1rem;
+    }
+  
+    #send-button {
+      padding: 1rem 1.5rem;
+    }
+  
+    /*--- 6.  misc tweaks -----------------------------*/
+    .button,
+    .mesh-button{
+      padding:.6rem 1rem;
+      font-size:.9rem;
+    }
+    iframe{                     /* YouTube player */
+      height:48svh !important;
     }
   }
   
@@ -1254,7 +1381,7 @@
   }
   
   .ai-model-info {
-    margin: 1.5rem 0;
+    margin-top: 1.5rem;
     padding: 2rem;
     background: rgba(255, 255, 255, 0.5);
     border-radius: 16px;
