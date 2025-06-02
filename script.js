@@ -436,73 +436,55 @@ function drawToolboxLines() {
     const container = document.querySelector('.components-container');
     if (!svg || !centerEl || comps.length === 0 || !container) return;
   
-    // Clear out any existing paths
+    // Clear any existing paths
     svg.innerHTML = '';
   
-    // Grab the container’s top-left, so all coordinates can be relative to it
     const cRect   = container.getBoundingClientRect();
     const ctrRect = centerEl.getBoundingClientRect();
-    const ctrX    = ctrRect.left + ctrRect.width  / 2 - cRect.left;
-    const ctrY    = ctrRect.top  + ctrRect.height / 2 - cRect.top;
+    // Round the center‐point of the toolbox
+    const ctrX    = Math.round(ctrRect.left + ctrRect.width  / 2 - cRect.left);
+    const ctrY    = Math.round(ctrRect.top  + ctrRect.height / 2 - cRect.top);
   
     comps.forEach(comp => {
-      const r  = comp.getBoundingClientRect();
-      const pX = r.left + r.width  / 2 - cRect.left;
-      const pY = r.top  + r.height / 2 - cRect.top;
+      const r = comp.getBoundingClientRect();
+      // Round each component’s center
+      const pX = Math.round(r.left + r.width  / 2 - cRect.left);
+      const pY = Math.round(r.top  + r.height / 2 - cRect.top);
   
-      // Vector from toolbox center → component center:
       const dx   = pX - ctrX;
       const dy   = pY - ctrY;
-      const dist = Math.hypot(dx, dy) || 1;   // never zero
-      const ux   = dx / dist;  // unit‐x
-      const uy   = dy / dist;  // unit‐y
+      const dist = Math.hypot(dx, dy) || 1;
+      const ux   = dx / dist;
+      const uy   = dy / dist;
   
-      // If the component is below the toolbox, we want to bow downward.
-      // curve = “how far out” the quadratic control point should sit.
-      const curve = dist * 0.15; // tweak 0.15→0.2 for a more pronounced bow
-  
-      // ─── Decide (perpX, perpY) so that:
-      //   1) perpY > 0  (always push downward if dy>0)
-      //   2) perpX has the same sign as dx  (always push outward)
-      //   3) If the connection is “nearly vertical” (|dx/dist|<0.2), force a purely downward bow
-      // ───────────────────────────────────────────────────────────────────────────────
+      const curve = dist * 0.15;
       let perpX, perpY;
   
-      // 2a) Check for “nearly vertical” (i.e. |dx/dist| is small)
-      const verticalThreshold = 0.05; 
+      const verticalThreshold = 0.05;
       if (Math.abs(dx / dist) < verticalThreshold) {
-        // Force a straight‐downward shift so the curve cannot collapse
         perpX = 0;
         perpY = 1;
-      }
-      else {
-        // 2b) Compute the raw perpendicular = (–uy, ux)
-        const rawX = -uy;
-        const rawY = ux;
-  
-        // 2c) Force “downward” and “outward”:
-        //     perpY = |rawY|  → always positive (bows downward)
-        //     perpX = sign(dx)*|rawX|  → outwards (left if dx<0, right if dx>0)
+      } else {
+        const rawX = -uy, rawY = ux;
         perpX = Math.sign(dx) * Math.abs(rawX);
         perpY = Math.abs(rawY);
       }
-      // ───────────────────────────────────────────────────────────────────────────────
   
-      // Midpoint between (ctrX, ctrY) and (pX, pY):
+      // Midpoint
       const midX = (ctrX + pX) / 2;
       const midY = (ctrY + pY) / 2;
+      // Curve control point: also round
+      const cX   = Math.round(midX + perpX * curve);
+      const cY   = Math.round(midY + perpY * curve);
   
-      // Push that midpoint “curve” units along (perpX, perpY):
-      const cX = midX + perpX * curve;
-      const cY = midY + perpY * curve;
-  
-      // Create the SVG path (quadratic Bézier):
+      // Now build the path using only integer coords:
       const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
       path.setAttribute('d', `M ${ctrX} ${ctrY} Q ${cX} ${cY} ${pX} ${pY}`);
       path.setAttribute('class', 'component-line');
       svg.appendChild(path);
     });
   }
+  
   
   
 
@@ -620,7 +602,14 @@ window.addEventListener('DOMContentLoaded', () => {
     drawToolboxLines();
   }, 250));
 
-  window.addEventListener('scroll', debounce(() => {
-    drawToolboxLines();
-  }, 250));
+  let ticking = false;
+  window.addEventListener('scroll', () => {
+    if (!ticking) {
+      window.requestAnimationFrame(() => {
+        drawToolboxLines();
+        ticking = false;
+      });
+      ticking = true;
+    }
+  });
 });
