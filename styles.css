@@ -192,6 +192,14 @@
     overflow: hidden;
     padding-top: 80px;
     background-color: #000;
+    background-image: url('images/white_matter_fibres_and_brain.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+  }
+  
+  .hero-section.video-error {
+    background-color: #000;
   }
   
   .hero-video {
@@ -208,6 +216,14 @@
   
   .hero-video:not(.loading) {
     opacity: 1;
+  }
+  
+  .hero-section:not(.video-error) .hero-video {
+    display: block;
+  }
+  
+  .hero-section.video-error .hero-video {
+    display: none;
   }
   
   .hero-title {
@@ -1290,7 +1306,7 @@
       font-size: 0.95rem;
     }
 
-    /* 1) Make the container ‘relative’ so the absolutely‐positioned
+    /* 1) Make the container 'relative' so the absolutely-positioned
     .toolbox-center is pinned within it */
     .toolbox-diagram {
         position: relative;
@@ -1311,7 +1327,7 @@
         padding: 1rem 2rem;   /* keep your original padding so the shape stays the same */
     }
 
-    /* 3) Remove extra top‐margin on components so they don’t shift down unexpectedly */
+    /* 3) Remove extra top-margin on components so they don't shift down unexpectedly */
     .components-container {
         margin-top: 0;
     }
@@ -1319,7 +1335,7 @@
     /* 4) Absolutely position the components stack */
     .components-container {
         position: absolute;
-        /* Tweak these until the “Meshing / dMRI Simulating / AI Coding Assistant” stack
+        /* Tweak these until the "Meshing / dMRI Simulating / AI Coding Assistant" stack
         sits exactly where you want (to the right of that rotated bar) */
 
         top: -100px;   /* ↓ adjust to move the stack up or down */
