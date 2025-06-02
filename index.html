@@ -28,6 +28,24 @@
     </div>
   </section>
 
+  <script>
+    // Add timeout for video loading
+    document.addEventListener('DOMContentLoaded', function() {
+      const video = document.querySelector('.hero-video');
+      const timeoutId = setTimeout(() => {
+        if (video.classList.contains('loading')) {
+          video.style.display = 'none';
+          video.parentElement.classList.add('video-error');
+        }
+      }, 1000); // 1 second timeout
+
+      // Clear timeout if video loads successfully
+      video.addEventListener('canplay', () => {
+        clearTimeout(timeoutId);
+      });
+    });
+  </script>
+
   <!-- ====================== TOOLBOX OVERVIEW ====================== -->
   <section class="toolbox-overview-section">
     <div class="toolbox-overview-inner glass">
