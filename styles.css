@@ -192,14 +192,14 @@
     overflow: hidden;
     padding-top: 80px;
     background-color: #000;
-    background-image: url('images/white_matter_fibres_and_brain.jpg');
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
   }
   
   .hero-section.video-error {
     background-color: #000;
+    background-image: url('images/white_matter_fibres_and_brain.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
   }
   
   .hero-video {
