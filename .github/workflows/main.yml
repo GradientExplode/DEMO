@@ -40,7 +40,6 @@ jobs:
           cp -R MCMRSimulator_Public_API_Document/* dist/MCMRSimulator_Public_API_Document/
           mkdir -p dist/MRIBuilder_Public_API_Document
           cp -R MRIBuilder_Public_API_Document/* dist/MRIBuilder_Public_API_Document/
-          cp FinalReport_GradientExplode.pdf dist/
 
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v3
