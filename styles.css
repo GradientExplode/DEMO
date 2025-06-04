@@ -1771,4 +1771,94 @@
     }
   }
   
+  /* New toolbox buttons styles */
+  .toolbox-buttons {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    margin: 2rem 0;
+    flex-wrap: wrap;
+  }
+
+  .toolbox-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.8rem 1.5rem;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 1rem;
+    text-decoration: none;
+    backdrop-filter: blur(4px);
+    box-shadow: 0 4px 12px rgba(108, 99, 255, 0.2);
+  }
+
+  .toolbox-button:hover {
+    background: rgba(108, 99, 255, 1);
+    transform: translateY(-4px);
+    box-shadow: 0 6px 16px rgba(108, 99, 255, 0.3);
+    text-decoration: none; /* Ensure no underline on hover */
+  }
+
+  .toolbox-button svg {
+    transition: transform 0.3s ease;
+  }
+
+  .toolbox-button:hover svg {
+    transform: scale(1.1);
+  }
+
+  /* Ensure no underline on buttons */
+  .toolbox-buttons a {
+    transition: transform 0.3s ease;
+    text-decoration: none;
+  }
+      
+  .toolbox-buttons a:hover {
+    text-decoration: none;
+  }
+
+  .pdf-button {
+    background: white;
+  }
+
+  .pdf-button:hover {
+    background: rgba(255, 255, 255, 0.9);
+    text-decoration: none;
+  }
+
+  .github-button {
+    background: rgba(36, 41, 46, 1);
+  }
+
+  .github-button:hover {
+    background: rgba(36, 41, 46, 1);
+    text-decoration: none;
+  }
+
+  .github-button svg {
+    color: white;
+  }
+
+  .github-button span#text {
+    color: white;
+  }
+
+  @media (max-width: 768px) {
+    .toolbox-buttons {
+      flex-direction: column;
+      align-items: stretch;
+      padding: 0 1rem;
+    }
+
+    .toolbox-button {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+  
+  
+  
   
