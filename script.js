@@ -149,13 +149,43 @@ let searchIndex = new Map(); // Stores word -> [filename, position] mapping
 async function initializeSearchIndex() {
     try {
         // Create an array of markdown file numbers (000 to 064)
-        const fileNumbers = Array.from({length: 65}, (_, i) => i.toString().padStart(3, '0'));
+        const MCMRSimulator_fileNumbers = Array.from({length: 65}, (_, i) => i.toString().padStart(3, '0'));
         
         // Load each markdown file
-        for (const num of fileNumbers) {
+        for (const num of MCMRSimulator_fileNumbers) {
             const filename = `${num}.md`;
             try {
-                const response = await fetch(`MCMRSimulator Public API Document/${filename}`);
+                const response = await fetch(`MCMRSimulator_Public_API_Document/${filename}`);
+                if (!response.ok) {
+                    console.log(`File ${filename} not found, skipping...`);
+                    continue;
+                }
+                const content = await response.text();
+                markdownIndex.set(filename, content);
+                
+                // Create word index
+                const words = content.toLowerCase().split(/\W+/);
+                words.forEach((word, position) => {
+                    if (word.length > 2) { // Ignore very short words
+                        if (!searchIndex.has(word)) {
+                            searchIndex.set(word, []);
+                        }
+                        searchIndex.get(word).push([filename, position]);
+                    }
+                });
+            } catch (error) {
+                console.error(`Error loading ${filename}:`, error);
+            }
+        }
+
+        // Create an array of markdown file numbers (000 to 053)
+        const MRIBuilder_fileNumbers = Array.from({length: 54}, (_, i) => i.toString().padStart(3, '0'));
+        
+        // Load each markdown file
+        for (const num of MRIBuilder_fileNumbers) {
+            const filename = `${num}.md`;
+            try {
+                const response = await fetch(`MRIBuilder_Public_API_Document/${filename}`);
                 if (!response.ok) {
                     console.log(`File ${filename} not found, skipping...`);
                     continue;
