@@ -135,7 +135,7 @@ const sendButton = document.getElementById('send-button');
 let messageHistory = [
   {
     role: 'system',
-    content: 'You are a helpful AI coding assistant with access to the MCMRSimulator API documentation. When users ask questions about the API, you can search through the documentation to provide accurate answers. You provide clear, concise, and accurate responses to programming-related questions. Please don not mention "Based on the provided documentation" in your responses. MCMR means MCMRSimulator in this context.'
+    content: 'You are a helpful AI coding assistant with access to the MCMRSimulator API documentation and MRIBuilder API documentation. When users ask questions about the API, you can search through the documentation to provide accurate answers. You provide clear, concise, and accurate responses to programming-related questions. Do not mention or reference the source of the information explicitly (e.g., avoid phrases like "based on the documentation" or "from the provided snippets" or "the document suggests"). Answer as if you already know the APIs thoroughly. MCMR means MCMRSimulator.jl in this context. MRIBuilder means MRIBuilder.jl in this context.'
   }
 ];
 
@@ -161,7 +161,7 @@ async function initializeSearchIndex() {
                     continue;
                 }
                 const content = await response.text();
-                markdownIndex.set(filename, content);
+                markdownIndex.set(`MCMRSimulator_${filename}`, content);
                 
                 // Create word index
                 const words = content.toLowerCase().split(/\W+/);
@@ -170,7 +170,7 @@ async function initializeSearchIndex() {
                         if (!searchIndex.has(word)) {
                             searchIndex.set(word, []);
                         }
-                        searchIndex.get(word).push([filename, position]);
+                        searchIndex.get(word).push([`MCMRSimulator_${filename}`, position]);
                     }
                 });
             } catch (error) {
@@ -178,8 +178,8 @@ async function initializeSearchIndex() {
             }
         }
 
-        // Create an array of markdown file numbers (000 to 053)
-        const MRIBuilder_fileNumbers = Array.from({length: 54}, (_, i) => i.toString().padStart(3, '0'));
+        // Create an array of markdown file numbers (000 to 054)
+        const MRIBuilder_fileNumbers = Array.from({length: 55}, (_, i) => i.toString().padStart(3, '0'));
         
         // Load each markdown file
         for (const num of MRIBuilder_fileNumbers) {
@@ -191,7 +191,7 @@ async function initializeSearchIndex() {
                     continue;
                 }
                 const content = await response.text();
-                markdownIndex.set(filename, content);
+                markdownIndex.set(`MRIBuilder_${filename}`, content);
                 
                 // Create word index
                 const words = content.toLowerCase().split(/\W+/);
@@ -200,7 +200,7 @@ async function initializeSearchIndex() {
                         if (!searchIndex.has(word)) {
                             searchIndex.set(word, []);
                         }
-                        searchIndex.get(word).push([filename, position]);
+                        searchIndex.get(word).push([`MRIBuilder_${filename}`, position]);
                     }
                 });
             } catch (error) {
