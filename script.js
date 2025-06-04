@@ -251,7 +251,7 @@ function searchMarkdown(query) {
             relevance: data.relevance
         }))
         .sort((a, b) => b.relevance - a.relevance)
-        .slice(0, 5); // Return top 3 most relevant results
+        .slice(0, 10); // Return top 10 most relevant results
 }
 
 /**
