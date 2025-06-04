@@ -228,10 +228,7 @@ function searchMarkdown(query) {
             const content = markdownIndex.get(filename);
             if (!content) return;
 
-            // Get context around the match (100 characters before and after)
-            const start = Math.max(0, position - 100);
-            const end = Math.min(content.length, position + 100);
-            const context = content.slice(start, end);
+            const context = content
 
             if (!results.has(filename)) {
                 results.set(filename, {
@@ -251,7 +248,7 @@ function searchMarkdown(query) {
             relevance: data.relevance
         }))
         .sort((a, b) => b.relevance - a.relevance)
-        .slice(0, 10); // Return top 10 most relevant results
+        .slice(0, 5); // Return top 5 most relevant results
 }
 
 /**
