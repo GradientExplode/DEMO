@@ -375,8 +375,16 @@ async function handleStreamResponse(response, messageDiv) {
   const messageContent = messageDiv.querySelector('.message-content');
   let accumulatedContent = '';
 
+  if (!messageContent) {
+    console.error('messageContent is null after querySelector. Cannot proceed with stream handling.');
+    // Optionally, you might want to add a fallback UI update here,
+    // but for now, we'll just stop processing this stream.
+    return; // Exit the function
+  }
+
   // Clear placeholder/dots
   messageContent.innerHTML = '';
+  if (!messageContent) { console.error('messageContent is null after querySelector'); reader.cancel(); return; }
   const typingDotsSpan = document.createElement('span');
   typingDotsSpan.className = 'typing-dots';
   typingDotsSpan.innerHTML = '<span class="typing-dot"></span><span class="typing-dot"></span><span class="typing-dot"></span>';
@@ -416,6 +424,7 @@ async function handleStreamResponse(response, messageDiv) {
             if (content) {
               accumulatedContent += content;
               // Update content and scroll
+              if (!messageContent) continue;
               messageContent.innerHTML = formatMessage(accumulatedContent) + '<span class="typing-dots"></span>';
               scrollToBottom();
             }
@@ -427,6 +436,7 @@ async function handleStreamResponse(response, messageDiv) {
     }
   } catch (error) {
     console.error('Error reading stream:', error);
+    if (!messageContent) return;
     messageContent.innerHTML = formatMessage(accumulatedContent) + '<br><span style="color: red;">Error: Stream interrupted</span>';
     scrollToBottom();
   }
@@ -436,6 +446,7 @@ async function handleStreamResponse(response, messageDiv) {
   if (dots) dots.remove();
 
   // Final render without dots
+  if (!messageContent) return;
   messageContent.innerHTML = formatMessage(accumulatedContent);
   scrollToBottom();
 
@@ -485,6 +496,16 @@ async function sendToOpenRouter(message) {
     // Create bot placeholder
     const botMessageDiv = addMessage('', false);
     const messageContent = botMessageDiv.querySelector('.message-content');
+
+    if (!messageContent) {
+      console.error('messageContent is null after querySelector. Cannot proceed with stream handling.');
+      // Optionally, you might want to add a fallback UI update here,
+      // but for now, we'll just stop processing this stream.
+      return; // Exit the function
+    }
+
+    // Clear placeholder/dots
+    messageContent.innerHTML = '';
 
     // Compose request body
     const requestBody = {
