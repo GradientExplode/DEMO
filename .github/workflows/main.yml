@@ -36,8 +36,8 @@ jobs:
         run: |
           mkdir -p dist/mesh
           cp -R mesh/* dist/mesh/
-          mkdir -p dist/MRIBuilder Public API Document
-          cp -R MRIBuilder Public API Document/* dist/MRIBuilder Public API Document/
+          mkdir -p "dist/MRIBuilder Public API Document"
+          cp -R "MRIBuilder Public API Document/*" "dist/MRIBuilder Public API Document/"
 
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v3
