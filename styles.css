@@ -1397,8 +1397,7 @@
   
     body{
       font-size: var(--text-base);
-      padding-inline: max(env(safe-area-inset-left),.5rem)
-                      max(env(safe-area-inset-right),.5rem);
+      padding-inline: max(env(safe-area-inset-left), 0rem);
     }
   
     /*--- 2.  navigation --------------------------------*/
@@ -1451,10 +1450,29 @@
     /* Toolbox section */
     .toolbox-overview-content h2 { font-size: var(--text-xl); }
     .toolbox-overview-content h3 { font-size: var(--text-lg); }
+    .toolbox-overview-inner {
+      padding: 0;
+    }
+    .toolbox-overview-inner h2 {
+      padding-top: 2rem;
+      font-size: var(--text-2xl);
+    }
     .toolbox-info { padding: 1.5rem; }
     .toolbox-info h3 { font-size: var(--text-lg); }
   
     /*--- 4.  mri/mesh/axon blocks -------------------------*/
+    .dmri-inner h2 {
+      padding-top: 2rem;
+      font-size: var(--text-2xl);
+    }
+    .video-container {
+      padding: 1rem;
+    }
+
+    .dmri-content {
+      padding: 0;
+    }
+
     .dmri-section {
         padding-top: 1rem;
         padding-bottom: 0;
@@ -1464,8 +1482,15 @@
         padding-bottom: 0;
     }
     .mesh-inner {
-        width: 97vw;     /* fill the viewport */
+        width: 100%;     /* fill the viewport */
         padding: 0;       /* no leftover internal padding */
+    }
+    .mesh-content.glass {
+      padding: 0;
+    }
+    .mesh-content.glass h2 {
+      padding-top: 2rem;
+      font-size: var(--text-2xl);
     }
 
     .axon-block{
@@ -1474,6 +1499,14 @@
     }
     .axon-block .mesh-viewer{
       height:180px;           /* keeps ratio sane */
+    }
+
+    .axon-mesh-branching {
+      padding: 0;
+    }
+
+    .blender-info-wrapper {
+      padding: 0;
     }
   
     /*--- 5.  chat area -------------------------------*/
@@ -1484,10 +1517,12 @@
     /* Chat container adjustments */
     .chat-container {
       height: calc(200vh - 100px);
+      padding: 0;
     }
   
     .chat-header h1 {
-      font-size: var(--text-xl);
+      padding-top: 2rem;
+      font-size: var(--text-2xl);
     }
   
     .message {
@@ -1495,25 +1530,40 @@
     }
   
     .chat-input-container {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem; /* Adjust gap if needed */
       padding: 1rem;
+      padding-bottom: 4rem;
+      position: relative; /* Add positioning context */
     }
   
     #chat-input {
-      padding: 1rem;
+      flex: unset; /* Remove flex-grow */
+      width: 100%; /* Ensure full width */
+      padding: 0.8rem; /* Adjust padding */
+      resize: none;
+      border: 1px solid rgba(108, 99, 255, 0.2);
     }
   
     #send-button {
-      padding: 1rem 1.5rem;
-    }
-  
-    /*--- 6.  misc tweaks -----------------------------*/
-    .button,
-    .mesh-button{
-      padding:.6rem 1rem;
-      font-size:.9rem;
-    }
-    iframe{                     /* YouTube player */
-      height:48svh !important;
+      padding: 0.6rem 1rem; /* Make button smaller */
+      border: none;
+      border-radius: 8px; /* Adjust border-radius */
+      background: rgba(108, 99, 255, 0.9);
+      color: white;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-weight: 500;
+      font-size: var(--text-sm); /* Smaller font size */
+      display: flex;
+      align-items: center;
+      justify-content: center; /* Center content */
+      gap: 0.5rem;
+      position: absolute; /* Position absolutely */
+      right: 0.75rem; /* Distance from right */
+      bottom: 0.75rem; /* Distance from top */
+      height: 38px; /* Set a fixed height if needed */
     }
   }
   
