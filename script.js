@@ -135,9 +135,94 @@ const sendButton = document.getElementById('send-button');
 let messageHistory = [
   {
     role: 'system',
-    content: 'You are a helpful AI coding assistant. You provide clear, concise, and accurate responses to programming-related questions.'
+    content: 'You are a helpful AI coding assistant with access to the MCMRSimulator API documentation. When users ask questions about the API, you can search through the documentation to provide accurate answers. You provide clear, concise, and accurate responses to programming-related questions. Please don not mention "Based on the provided documentation" in your responses. MCMR means MCMRSimulator in this context.'
   }
 ];
+
+// ---------- MARKDOWN SEARCH FUNCTIONALITY ----------
+let markdownIndex = new Map(); // Stores filename -> content mapping
+let searchIndex = new Map(); // Stores word -> [filename, position] mapping
+
+/**
+ * Loads all markdown files and creates a search index
+ */
+async function initializeSearchIndex() {
+    try {
+        // Create an array of markdown file numbers (000 to 064)
+        const fileNumbers = Array.from({length: 65}, (_, i) => i.toString().padStart(3, '0'));
+        
+        // Load each markdown file
+        for (const num of fileNumbers) {
+            const filename = `${num}.md`;
+            try {
+                const response = await fetch(`MCMRSimulator Public API Document/${filename}`);
+                if (!response.ok) {
+                    console.log(`File ${filename} not found, skipping...`);
+                    continue;
+                }
+                const content = await response.text();
+                markdownIndex.set(filename, content);
+                
+                // Create word index
+                const words = content.toLowerCase().split(/\W+/);
+                words.forEach((word, position) => {
+                    if (word.length > 2) { // Ignore very short words
+                        if (!searchIndex.has(word)) {
+                            searchIndex.set(word, []);
+                        }
+                        searchIndex.get(word).push([filename, position]);
+                    }
+                });
+            } catch (error) {
+                console.error(`Error loading ${filename}:`, error);
+            }
+        }
+        console.log('Search index initialized with', markdownIndex.size, 'documents');
+    } catch (error) {
+        console.error('Error initializing search index:', error);
+    }
+}
+
+/**
+ * Search for relevant content in markdown files
+ * @param {string} query - The search query
+ * @returns {Array} Array of {filename, content, relevance} objects
+ */
+function searchMarkdown(query) {
+    const searchTerms = query.toLowerCase().split(/\W+/).filter(term => term.length > 2);
+    const results = new Map(); // filename -> {content, relevance}
+
+    searchTerms.forEach(term => {
+        const matches = searchIndex.get(term) || [];
+        matches.forEach(([filename, position]) => {
+            const content = markdownIndex.get(filename);
+            if (!content) return;
+
+            // Get context around the match (100 characters before and after)
+            const start = Math.max(0, position - 100);
+            const end = Math.min(content.length, position + 100);
+            const context = content.slice(start, end);
+
+            if (!results.has(filename)) {
+                results.set(filename, {
+                    content: context,
+                    relevance: 0
+                });
+            }
+            results.get(filename).relevance += 1;
+        });
+    });
+
+    // Convert to array and sort by relevance
+    return Array.from(results.entries())
+        .map(([filename, data]) => ({
+            filename,
+            content: data.content,
+            relevance: data.relevance
+        }))
+        .sort((a, b) => b.relevance - a.relevance)
+        .slice(0, 5); // Return top 3 most relevant results
+}
 
 /**
  * Canonicalise TeX delimiters in Markdown, but leave fenced code blocks untouched.
@@ -346,6 +431,27 @@ async function sendToOpenRouter(message) {
   if (!chatMessages) return;
 
   try {
+    // Search for relevant documentation
+    const searchResults = searchMarkdown(message);
+    console.log(searchResults);
+    let contextMessage = '';
+    
+    if (searchResults.length > 0) {
+        contextMessage = '\n\nRelevant documentation found:\n' + 
+            searchResults.map(result => 
+                `From ${result.filename}:\n${result.content}\n`
+            ).join('\n');
+    }
+
+    // Add the search results to the message history
+    const messages = [
+        ...messageHistory,
+        {
+            role: 'user',
+            content: message + contextMessage
+        }
+    ];
+
     // Add user message
     addMessage(message, true);
 
@@ -354,18 +460,14 @@ async function sendToOpenRouter(message) {
     const messageContent = botMessageDiv.querySelector('.message-content');
 
     // Compose request body
-    const currentMessages = messageHistory.map(msg => ({
-      role: msg.role,
-      content: msg.content
-    }));
     const requestBody = {
       model: MODEL,
       provider: {
         only: ["nebius/fp8"]
       },
-      messages: [...currentMessages, { role: 'user', content: message }],
+      messages: messages,
       temperature: 0.7,
-      max_tokens: 4096,
+      max_tokens: 16384,
       stream: true
     };
 
@@ -447,7 +549,7 @@ function drawToolboxLines() {
   
     comps.forEach(comp => {
       const r = comp.getBoundingClientRect();
-      // Round each component’s center
+      // Round each component's center
       const pX = Math.round(r.left + r.width  / 2 - cRect.left);
       const pY = Math.round(r.top  + r.height / 2 - cRect.top);
   
@@ -612,4 +714,7 @@ window.addEventListener('DOMContentLoaded', () => {
       ticking = true;
     }
   });
+
+  // Initialize search index when the page loads
+  initializeSearchIndex();
 });
