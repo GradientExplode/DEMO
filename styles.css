@@ -1455,6 +1455,8 @@
     }
     .toolbox-overview-inner h2 {
       padding-top: 2rem;
+      padding-left: 1rem;
+      padding-right: 1rem;
       font-size: var(--text-2xl);
     }
     .toolbox-info { padding: 1.5rem; }
